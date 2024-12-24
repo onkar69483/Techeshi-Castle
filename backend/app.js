@@ -1,12 +1,14 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
+const connectDB = require("./config/db");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
+connectDB();
 
-// Landing page route
 app.get("/", (req, res) => {
     res.send("Server is running");
 });

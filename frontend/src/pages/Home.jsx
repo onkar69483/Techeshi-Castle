@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import Footer from '../components/Footer';
-import { ChevronDown, Trophy, Users, Calendar, Crown, Star, Shield } from 'lucide-react';
+import { ChevronDown, Users, Calendar, Crown, Star, Shield } from 'lucide-react';
+import DynamicBackground from "../components/DynamicBackground";
 
 const Home = () => {
   const events = [
@@ -76,6 +77,7 @@ const Home = () => {
       {/* Hero Section with enhanced gradient */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
+          <DynamicBackground />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A1F] via-[#1A1A3F] to-[#0A0A1F] opacity-90" />
           <motion.div
             animate={{

@@ -119,12 +119,14 @@ const Home = () => {
           transition={{ duration: 1, delay: 1 }}
           className="absolute bottom-8"
         >
-          <ChevronDown className="w-12 h-12 text-white/50 animate-bounce" />
+          <a href="#featured-events">
+            <ChevronDown className="w-12 h-12 text-white/50 animate-bounce" />
+          </a>
         </motion.div>
       </section>
 
       {/* Enhanced Events Preview Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-[#0A0A1F] to-[#1A1A3F]">
+      <section id="featured-events" className="py-20 px-4 bg-gradient-to-b from-[#0A0A1F] to-[#1A1A3F]">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

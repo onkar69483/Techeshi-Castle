@@ -1,3 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --game-dark: #0f0f1a;
+  --game-darker: #080810;
+  --game-purple: #8b5cf6;
+  --game-pink: #ec4899;
+  --game-card: #1a1a2e;
+}
+
+body {
+  @apply bg-game-dark text-white;
+}
+
+.font-gaming {
+  font-family: 'Press Start 2P', cursive;
+}
+
+.font-space {
+  font-family: 'Space Mono', monospace;
+}
+
+.bg-game-dark {
+  background-color: var(--game-dark);
+}
+
+.bg-game-darker {
+  background-color: var(--game-darker);
+}
+
+.bg-game-card {
+  background-color: var(--game-card);
+}
+
+.from-game-purple {
+  --tw-gradient-from: var(--game-purple);
+}
+
+.to-game-pink {
+  --tw-gradient-to: var(--game-pink);
+}
+
+.animate-gradient {
+  background-size: 200% auto;
+  animation: gradient 5s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+

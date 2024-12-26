@@ -32,24 +32,41 @@ const Home = () => {
       }
   ];
 
-  const [leaderboard, setLeaderboard] = useState([
-    { rank: 1, team: "Cyber Ninjas", score: 2500, trend: "up", avatar: "🥷" },
-    { rank: 2, team: "Quantum Questers", score: 2350, trend: "down", avatar: "🎯" },
-    { rank: 3, team: "Binary Bandits", score: 2200, trend: "up", avatar: "👾" },
-    { rank: 4, team: "Pixel Pirates", score: 2050, trend: "stable", avatar: "🏴‍☠️" },
-    { rank: 5, team: "Data Dragons", score: 1900, trend: "down", avatar: "🐉" },
-  ]);
+  const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
+    // Get teams from localStorage and format them for leaderboard
+    const storedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
+    const formattedTeams = storedTeams.map((team, index) => ({
+      rank: index + 1,
+      team: team.name,
+      score: team.totalPoints,
+      trend: "stable",
+      avatar: getTeamAvatar(index) // Helper function to assign avatars
+    })).sort((a, b) => b.score - a.score);
+
+    setLeaderboard(formattedTeams);
+  }, []);
+
+  // Helper function to assign avatars
+  const getTeamAvatar = (index) => {
+    const avatars = ["🥷", "🎯", "👾", "🏴‍☠️", "🐉"];
+    return avatars[index % avatars.length];
+  };
+
+  // Update scores periodically (optional - you can remove this if you want to show only real scores)
+  useEffect(() => {
     const interval = setInterval(() => {
-      setLeaderboard(prevLeaderboard => {
-        const newLeaderboard = [...prevLeaderboard];
-        const randomIndex = Math.floor(Math.random() * newLeaderboard.length);
-        const scoreChange = Math.floor(Math.random() * 100);
-        newLeaderboard[randomIndex].score += scoreChange;
-        newLeaderboard[randomIndex].trend = scoreChange > 50 ? "up" : "down";
-        return newLeaderboard.sort((a, b) => b.score - a.score).map((team, index) => ({ ...team, rank: index + 1 }));
-      });
+      const storedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
+      const formattedTeams = storedTeams.map((team, index) => ({
+        rank: index + 1,
+        team: team.name,
+        score: team.totalPoints,
+        trend: "stable",
+        avatar: getTeamAvatar(index)
+      })).sort((a, b) => b.score - a.score);
+
+      setLeaderboard(formattedTeams);
     }, 5000);
 
     return () => clearInterval(interval);

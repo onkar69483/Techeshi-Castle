@@ -5,8 +5,31 @@ const Leaderboard = () => {
   const [scores, setScores] = useState([]);
 
   useEffect(() => {
-    // Fetch scores from your backend
-    // Example: fetch('your-api-endpoint/scores')
+    // Get teams from localStorage and format them for leaderboard
+    const storedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
+    const formattedTeams = storedTeams
+      .map(team => ({
+        team: team.name,
+        score: team.totalPoints
+      }))
+      .sort((a, b) => b.score - a.score); // Sort by score in descending order
+
+    setScores(formattedTeams);
+
+    // Update scores every 5 seconds
+    const interval = setInterval(() => {
+      const updatedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
+      const updatedFormattedTeams = updatedTeams
+        .map(team => ({
+          team: team.name,
+          score: team.totalPoints
+        }))
+        .sort((a, b) => b.score - a.score);
+      
+      setScores(updatedFormattedTeams);
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -26,19 +49,27 @@ const Leaderboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {scores.map((score, index) => (
-                  <motion.tr 
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="border-b border-game-purple/10"
-                  >
-                    <td className="px-6 py-4">{index + 1}</td>
-                    <td className="px-6 py-4">{score.team}</td>
-                    <td className="px-6 py-4">{score.score}</td>
-                  </motion.tr>
-                ))}
+                {scores.length === 0 ? (
+                  <tr>
+                    <td colSpan="3" className="px-6 py-4 text-center text-gray-400">
+                      No teams available
+                    </td>
+                  </tr>
+                ) : (
+                  scores.map((score, index) => (
+                    <motion.tr 
+                      key={index}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="border-b border-game-purple/10"
+                    >
+                      <td className="px-6 py-4">{index + 1}</td>
+                      <td className="px-6 py-4">{score.team}</td>
+                      <td className="px-6 py-4">{score.score}</td>
+                    </motion.tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -48,4 +79,4 @@ const Leaderboard = () => {
   );
 };
 
-export default Events; 
+export default Leaderboard; 

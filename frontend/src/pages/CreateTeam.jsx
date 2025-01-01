@@ -9,9 +9,9 @@ const CreateTeam = () => {
     contact: '',
     players: [''],
     challengeScores: {
-      challenge1: 1200,
-      challenge2: 500,
-      challenge3: 600,
+      challenge1: 0,
+      challenge2: 0,
+      challenge3: 0,
     },
     totalScore: 0,
   });

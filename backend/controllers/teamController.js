@@ -10,6 +10,8 @@ const getTeams = async (req, res) => {
 };
 
 const createTeam = async (req, res) => {
+    console.log(req.body);
+    
     try {
         const {
             team_name,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -9,13 +9,14 @@ const CreateTeam = () => {
     contact: '',
     players: [''],
     challengeScores: {
-      challenge1: 1200,
-      challenge2: 500,
-      challenge3: 600,
+      challenge1: 0,
+      challenge2: 0,
+      challenge3: 0,
     },
     totalScore: 0,
   });
 
+  // eslint-disable-next-line no-unused-vars
   const [showChallengeScores, setShowChallengeScores] = useState(true);
   const navigate = useNavigate();
 
@@ -42,10 +43,14 @@ const CreateTeam = () => {
   };
 
   const handleAddPlayer = () => {
-    setTeamData((prev) => ({
-      ...prev,
-      players: [...prev.players, ''],
-    }));
+    if (teamData.players.length < 4) {
+      setTeamData((prev) => ({
+        ...prev,
+        players: [...prev.players, ''],
+      }));
+    } else {
+      alert("Maximum Players Selected");
+    }
   };
 
   const handleChallengeScoreChange = (key, value) => {
@@ -128,7 +133,7 @@ const CreateTeam = () => {
           <div className="mb-4">
             <label className="block font-gaming text-white mb-2">Contact Number</label>
             <input
-              type="text"
+              type="number"
               value={teamData.contact}
               onChange={(e) => handleInputChange('contact', e.target.value)}
               className="w-full px-4 py-3 bg-game-dark rounded-lg border border-game-purple/20 focus:border-game-pink/50 focus:outline-none text-white"
@@ -225,4 +230,6 @@ const CreateTeam = () => {
 };
 
 export default CreateTeam;
+
+
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Search, X, Edit, Trash2, Check } from "lucide-react";
 
@@ -10,42 +10,7 @@ const AdminDashboard = () => {
   const [editingTeam, setEditingTeam] = useState(null);
 
   useEffect(() => {
-    const storedTeams = localStorage.getItem('teams');
-    if (!storedTeams) {
-      const initialTeams = [
-        { 
-          id: 1, 
-          name: 'Cyber Ninjas', 
-          totalPoints: 2500, 
-          challenge1: 800, 
-          challenge2: 900, 
-          challenge3: 800,
-          completionTime: '2:30:15'
-        },
-        { 
-          id: 2, 
-          name: 'Quantum Questers', 
-          totalPoints: 2350, 
-          challenge1: 750, 
-          challenge2: 800, 
-          challenge3: 800,
-          completionTime: '2:45:30'
-        },
-        { 
-          id: 3, 
-          name: 'Binary Bandits', 
-          totalPoints: 2200, 
-          challenge1: 700, 
-          challenge2: 750, 
-          challenge3: 750,
-          completionTime: '3:15:45'
-        },
-      ];
-      localStorage.setItem('teams', JSON.stringify(initialTeams));
-      setTeams(initialTeams);
-    } else {
-      setTeams(JSON.parse(storedTeams));
-    }
+    
   }, []);
 
   useEffect(() => {

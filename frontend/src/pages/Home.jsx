@@ -10,26 +10,26 @@ import DynamicBackground from "../components/DynamicBackground";
 const Home = () => {
   const events = [
     {
-        title: "Circuit Showdown",
-        description: "Battle against time in this electronic puzzle challenge!",
-        image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-        color: "from-violet-600 to-fuchsia-600",
-        icon: "🎮"
-      },
-      {
-        title: "Robot Rampage",
-        description: "Command your robot through epic challenges!",
-        color: "from-cyan-600 to-blue-600",
-        image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
-        icon: "🤖"
-      },
-      {
-        title: "Tech Titans Arena",
-        description: "Prove your worth in the ultimate electronics showdown!",
-        image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
-        color: "from-rose-600 to-orange-600",
-        icon: "⚡"
-      }
+      title: "Circuit Showdown",
+      description: "Battle against time in this electronic puzzle challenge!",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+      color: "from-violet-600 to-fuchsia-600",
+      icon: "🎮"
+    },
+    {
+      title: "Robot Rampage",
+      description: "Command your robot through epic challenges!",
+      color: "from-cyan-600 to-blue-600",
+      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
+      icon: "🤖"
+    },
+    {
+      title: "Tech Titans Arena",
+      description: "Prove your worth in the ultimate electronics showdown!",
+      image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
+      color: "from-rose-600 to-orange-600",
+      icon: "⚡"
+    }
   ];
 
   const [leaderboard, setLeaderboard] = useState([]);
@@ -73,7 +73,7 @@ const Home = () => {
   }, []);
 
   const getTrendColor = (trend) => {
-    switch(trend) {
+    switch (trend) {
       case "up": return "text-emerald-400";
       case "down": return "text-rose-400";
       default: return "text-gray-400";
@@ -81,7 +81,7 @@ const Home = () => {
   };
 
   const getRankIcon = (rank) => {
-    switch(rank) {
+    switch (rank) {
       case 1: return <Crown className="w-8 h-8 text-yellow-400" />;
       case 2: return <Star className="w-8 h-8 text-gray-400" />;
       case 3: return <Shield className="w-8 h-8 text-orange-400" />;
@@ -215,21 +215,19 @@ const Home = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className={`flex flex-col items-center justify-end p-6 rounded-xl backdrop-blur-lg ${
-                      index === 0 ? 'bg-yellow-500/20 border-yellow-500/50' : 
-                      index === 1 ? 'bg-gray-500/20 border-gray-500/50' : 
-                      'bg-orange-600/20 border-orange-500/50'
-                    } border`}
+                    className={`flex flex-col items-center justify-end p-6 rounded-xl backdrop-blur-lg ${index === 0 ? 'bg-yellow-500/20 border-yellow-500/50' :
+                      index === 1 ? 'bg-gray-500/20 border-gray-500/50' :
+                        'bg-orange-600/20 border-orange-500/50'
+                      } border`}
                     style={{ height: `${200 + (3 - index) * 50}px` }}
                   >
                     <div className="text-4xl mb-4">{team.avatar}</div>
                     <p className="font-gaming text-xl mb-2 text-center">{team.team}</p>
                     <p className="font-space text-2xl font-bold">{team.score.toLocaleString()}</p>
-                    <div className={`mt-4 rounded-full px-4 py-1 text-sm font-bold ${
-                      index === 0 ? 'bg-yellow-500/20 text-yellow-300' :
+                    <div className={`mt-4 rounded-full px-4 py-1 text-sm font-bold ${index === 0 ? 'bg-yellow-500/20 text-yellow-300' :
                       index === 1 ? 'bg-gray-500/20 text-gray-300' :
-                      'bg-orange-500/20 text-orange-300'
-                    }`}>
+                        'bg-orange-500/20 text-orange-300'
+                      }`}>
                       #{team.rank}
                     </div>
                   </motion.div>
@@ -253,7 +251,7 @@ const Home = () => {
                       </div>
                       <div className="flex items-center gap-4">
                         <p className={`font-space text-xl font-bold ${getTrendColor(team.trend)}`}>
-                          {team.score.toLocaleString()}
+                          {/* {team.score.toLocaleString()} */}
                         </p>
                       </div>
                     </motion.div>

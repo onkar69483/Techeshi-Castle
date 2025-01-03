@@ -9,3 +9,4 @@ router.put("/:id", updateTeam);
 router.delete("/:id", deleteTeam);
 
 module.exports = router;
+

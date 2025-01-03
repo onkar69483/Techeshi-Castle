@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import Footer from '../components/Footer';
@@ -223,7 +223,7 @@ const Home = () => {
                   >
                     <div className="text-4xl mb-4">{team.avatar}</div>
                     <p className="font-gaming text-xl mb-2 text-center">{team.team}</p>
-                    <p className="font-space text-2xl font-bold">{team.score.toLocaleString()}</p>
+                    {/* <p className="font-space text-2xl font-bold">{team.score.toLocaleString()}</p> */}
                     <div className={`mt-4 rounded-full px-4 py-1 text-sm font-bold ${index === 0 ? 'bg-yellow-500/20 text-yellow-300' :
                       index === 1 ? 'bg-gray-500/20 text-gray-300' :
                         'bg-orange-500/20 text-orange-300'

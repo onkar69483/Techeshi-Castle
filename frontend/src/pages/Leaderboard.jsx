@@ -1,36 +1,53 @@
-import React, { useState, useEffect } from "react";
+import { useState , useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from 'axios';
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
+  const [ loading ,setLoading ] = useState(true);
+  const [error , setError] = useState(null);
+
+  const fetchAndFormatTeams = (teams) => {
+    return teams
+    .map((team)=>({
+      team: team.team_name,
+      score: team.total_score,
+    }))
+    .sort((a,b) => b.score - a.score);
+  };
+
+
+
 
   useEffect(() => {
-    // Get teams from localStorage and format them for leaderboard
-    const storedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-    const formattedTeams = storedTeams
-      .map(team => ({
-        team: team.name,
-        score: team.totalPoints
-      }))
-      .sort((a, b) => b.score - a.score); // Sort by score in descending order
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/teams"); 
+        const formattedTeams = fetchAndFormatTeams(response.data);
+        setScores(formattedTeams);
+        setLoading(false);
+      } catch{
+        setError("Failed to fetch teams data.");
+        setLoading(false);
+      }
+    };
 
-    setScores(formattedTeams);
+    fetchTeams();
 
-    // Update scores every 5 seconds
-    const interval = setInterval(() => {
-      const updatedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-      const updatedFormattedTeams = updatedTeams
-        .map(team => ({
-          team: team.name,
-          score: team.totalPoints
-        }))
-        .sort((a, b) => b.score - a.score);
-      
-      setScores(updatedFormattedTeams);
-    }, 5000);
+  const interval = setInterval(()=> {
+    fetchTeams();
+  },2500);
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval);
+} , []);
+
+  if (loading){
+    return <div>Loading...</div>;
+  }
+  if(error){
+    return <div>{error}</div>
+  }
+
 
   return (
     <div className="pt-24 pb-16 min-h-screen">

@@ -77,4 +77,25 @@ const deleteTeam = async (req, res) => {
     }
 };
 
-module.exports = { getTeams, createTeam, updateTeam, deleteTeam };
+const searchTeams = async (req , res) => {
+    const searchQuery = req.query.search || '';
+
+    try {
+        const regex = new RegExp(searchQuery, 'i');
+        const teams = await Team.find({
+            $or: [
+                { team_name: {$regex: regex}},
+                {college: {$regex: regex}}
+            ]
+        }).sort({total_score: -1});
+
+        res.json(teams)
+    }
+
+    catch(error){
+        console.error(error);
+        res.status(500),json({message: 'Server Error'});
+    }
+};
+
+module.exports = { getTeams, createTeam, updateTeam, deleteTeam , searchTeams };

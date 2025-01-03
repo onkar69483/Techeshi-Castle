@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Footer from '../components/Footer';
 import { ChevronDown, Users, Calendar, Crown, Star, Shield } from 'lucide-react';
 import DynamicBackground from "../components/DynamicBackground";
+import axios from "axios";
 
 const Home = () => {
   const events = [
@@ -35,42 +36,30 @@ const Home = () => {
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
-    // Get teams from localStorage and format them for leaderboard
-    const storedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-    const formattedTeams = storedTeams.map((team, index) => ({
-      rank: index + 1,
-      team: team.name,
-      score: team.totalPoints,
-      trend: "stable",
-      avatar: getTeamAvatar(index) // Helper function to assign avatars
-    })).sort((a, b) => b.score - a.score);
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/teams');
+        const formattedTeams = response.data.map((team, index) => ({
+          rank: index + 1,
+          team: team.team_name,
+          score: team.total_score,
+          trend: "stable",
+          avatar: getTeamAvatar(index)
+        })).sort((a, b) => b.score - a.score);
 
-    setLeaderboard(formattedTeams);
+        setLeaderboard(formattedTeams);
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    };
+
+    fetchTeams();
   }, []);
 
-  // Helper function to assign avatars
   const getTeamAvatar = (index) => {
     const avatars = ["🥷", "🎯", "👾", "🏴‍☠️", "🐉"];
     return avatars[index % avatars.length];
   };
-
-  // Update scores periodically (optional - you can remove this if you want to show only real scores)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const storedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-      const formattedTeams = storedTeams.map((team, index) => ({
-        rank: index + 1,
-        team: team.name,
-        score: team.totalPoints,
-        trend: "stable",
-        avatar: getTeamAvatar(index)
-      })).sort((a, b) => b.score - a.score);
-
-      setLeaderboard(formattedTeams);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const getTrendColor = (trend) => {
     switch (trend) {

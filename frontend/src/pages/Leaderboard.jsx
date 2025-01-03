@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import axios from 'axios';
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
 
   useEffect(() => {
-    // Get teams from localStorage and format them for leaderboard
-    const storedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-    const formattedTeams = storedTeams
-      .map(team => ({
-        team: team.name,
-        score: team.totalPoints
-      }))
-      .sort((a, b) => b.score - a.score); // Sort by score in descending order
+    const fetchTeams = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/teams'); // Update the URL if needed
+        const formattedTeams = response.data.map(team => ({
+          team: team.team_name,
+          score: team.total_score
+        })).sort((a, b) => b.score - a.score); // Sort by score in descending order
 
-    setScores(formattedTeams);
+        setScores(formattedTeams);
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+      }
+    };
+
+    fetchTeams();
 
     // Update scores every 5 seconds
-    const interval = setInterval(() => {
-      const updatedTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-      const updatedFormattedTeams = updatedTeams
-        .map(team => ({
-          team: team.name,
-          score: team.totalPoints
-        }))
-        .sort((a, b) => b.score - a.score);
-      
-      setScores(updatedFormattedTeams);
-    }, 5000);
+    const interval = setInterval(fetchTeams, 5000);
 
     return () => clearInterval(interval);
   }, []);

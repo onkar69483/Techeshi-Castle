@@ -20,6 +20,7 @@ const createTeam = async (req, res) => {
             challenge_3_score,
             total_score,
             players,
+            avator
         } = req.body;
 
         if (!team_name || !college || !contact || !players || !total_score) {
@@ -35,6 +36,7 @@ const createTeam = async (req, res) => {
             challenge_3_score,
             total_score,
             players,
+            avator
         });
 
         const savedTeam = await newTeam.save();

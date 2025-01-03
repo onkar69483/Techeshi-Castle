@@ -42,6 +42,10 @@ const teamSchema = new mongoose.Schema({
             },
             message: "A team can have at most 4 players"
         }
+    },
+    avator: {
+        type: String,
+        default: "⭐"
     }
 });
 

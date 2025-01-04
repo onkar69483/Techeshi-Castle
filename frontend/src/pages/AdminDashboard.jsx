@@ -59,15 +59,27 @@ const AdminDashboard = () => {
   };
 
   const handleSave = () => {
-    const updatedTeams = teams.map(team =>
-      team.id === editingTeam.id ? {
-        ...editingTeam,
-        totalScore: Number(editingTeam.challenge1Score) + Number(editingTeam.challenge2Score) + Number(editingTeam.challenge3Score)
-      } : team
-    );
-    setTeams(updatedTeams);
-    localStorage.setItem('teams', JSON.stringify(updatedTeams));
-    setEditingTeam(null);
+    axios.put(`https://techeshi-castle-backend.vercel.app/teams/${editingTeam.id}`, {
+      team_name: editingTeam.teamName,
+      challenge_1_score: editingTeam.challenge1Score,
+      challenge_2_score: editingTeam.challenge2Score,
+      challenge_3_score: editingTeam.challenge3Score,
+      total_score: Number(editingTeam.challenge1Score) + Number(editingTeam.challenge2Score) + Number(editingTeam.challenge3Score)
+    })
+    .then(() => {
+      const updatedTeams = teams.map(team =>
+        team.id === editingTeam.id ? {
+          ...editingTeam,
+          totalScore: Number(editingTeam.challenge1Score) + Number(editingTeam.challenge2Score) + Number(editingTeam.challenge3Score)
+        } : team
+      );
+      setTeams(updatedTeams);
+      localStorage.setItem('teams', JSON.stringify(updatedTeams));
+      setEditingTeam(null);
+    })
+    .catch(error => {
+      console.error("Error updating team data:", error);
+    });
   };
 
   const handleCancel = () => {
@@ -75,15 +87,9 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = (teamId) => {
-    axios.delete(`https://techeshi-castle-backend.vercel.app/teams/${teamId}`)
-      .then(() => {
-        const updatedTeams = teams.filter(team => team.id !== teamId);
-        setTeams(updatedTeams);
-        localStorage.setItem('teams', JSON.stringify(updatedTeams));
-      })
-      .catch(error => {
-        console.error("Error deleting team data:", error);
-      });
+    const updatedTeams = teams.filter(team => team.id !== teamId);
+    setTeams(updatedTeams);
+    localStorage.setItem('teams', JSON.stringify(updatedTeams));
   };
 
   const handleLogout = () => {

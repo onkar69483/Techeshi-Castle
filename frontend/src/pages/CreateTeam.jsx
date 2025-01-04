@@ -66,7 +66,7 @@ const CreateTeam = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}teams`, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/teams`, {
         team_name: teamData.teamName,
         college: teamData.college,
         contact: teamData.contact,

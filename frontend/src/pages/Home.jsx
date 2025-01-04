@@ -35,31 +35,41 @@ const Home = () => {
 
   const [leaderboard, setLeaderboard] = useState([]);
 
+  const fetchTeams = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/teams`); // Fetch from MongoDB
+      const formattedTeams = response.data.map((team, index) => ({
+        rank: index + 1,
+        team: team.team_name,
+        score: team.total_score,
+        trend: "stable",
+        avatar: getTeamAvatar(index)
+      })).sort((a, b) => b.score - a.score);
+
+      setLeaderboard(formattedTeams.slice(0, 5)); // Limit to top 5 teams
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/teams');
-        const formattedTeams = response.data.map((team, index) => ({
-          rank: index + 1,
-          team: team.team_name,
-          score: team.total_score,
-          trend: "stable",
-          avatar: getTeamAvatar(index)
-        })).sort((a, b) => b.score - a.score);
-
-        setLeaderboard(formattedTeams);
-      } catch (error) {
-        console.error("Error fetching teams:", error);
-      }
-    };
-
-    fetchTeams();
+    fetchTeams(); // Call fetchTeams to refresh leaderboard
   }, []);
 
+  // Helper function to assign avatars
   const getTeamAvatar = (index) => {
     const avatars = ["🥷", "🎯", "👾", "🏴‍☠️", "🐉"];
     return avatars[index % avatars.length];
   };
+
+  // Update scores periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchTeams(); // Call fetchTeams to refresh leaderboard
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const getTrendColor = (trend) => {
     switch (trend) {

@@ -75,9 +75,15 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = (teamId) => {
-    const updatedTeams = teams.filter(team => team.id !== teamId);
-    setTeams(updatedTeams);
-    localStorage.setItem('teams', JSON.stringify(updatedTeams));
+    axios.delete(`https://techeshi-castle-backend.vercel.app/teams/${teamId}`)
+      .then(() => {
+        const updatedTeams = teams.filter(team => team.id !== teamId);
+        setTeams(updatedTeams);
+        localStorage.setItem('teams', JSON.stringify(updatedTeams));
+      })
+      .catch(error => {
+        console.error("Error deleting team data:", error);
+      });
   };
 
   const handleLogout = () => {

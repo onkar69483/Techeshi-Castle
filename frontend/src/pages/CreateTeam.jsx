@@ -16,7 +16,6 @@ const CreateTeam = () => {
     totalScore: 0,
   });
 
-  // eslint-disable-next-line no-unused-vars
   const [showChallengeScores, setShowChallengeScores] = useState(true);
   const navigate = useNavigate();
 
@@ -67,7 +66,7 @@ const CreateTeam = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/teams', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}teams`, {
         team_name: teamData.teamName,
         college: teamData.college,
         contact: teamData.contact,
@@ -81,12 +80,9 @@ const CreateTeam = () => {
       navigate('/admin');
     } catch (error) {
       console.error('Error saving team:', error.response?.data || error.message);
-      console.log("Data", teamData);
-
       alert('Failed to save the team. Please try again.');
     }
 
-    // Save to localStorage
     const existingTeams = JSON.parse(localStorage.getItem('teams') || '[]');
     const newTeam = {
       id: Math.max(...existingTeams.map((t) => t.id), 0) + 1,
@@ -116,7 +112,6 @@ const CreateTeam = () => {
               required
             />
           </div>
-
           {/* College */}
           <div className="mb-4">
             <label className="block font-gaming text-white mb-2">College</label>
@@ -128,7 +123,6 @@ const CreateTeam = () => {
               required
             />
           </div>
-
           {/* Contact */}
           <div className="mb-4">
             <label className="block font-gaming text-white mb-2">Contact Number</label>
@@ -140,7 +134,6 @@ const CreateTeam = () => {
               required
             />
           </div>
-
           {/* Players */}
           <div className="mb-4">
             <label className="block font-gaming text-white mb-2">Player Names</label>
@@ -164,7 +157,6 @@ const CreateTeam = () => {
               + Add Player
             </button>
           </div>
-
           {/* Challenge Scores */}
           {showChallengeScores && (
             <>
@@ -201,7 +193,6 @@ const CreateTeam = () => {
                   className="w-full px-4 py-3 bg-game-dark rounded-lg border border-game-purple/20 focus:border-game-pink/50 focus:outline-none text-white"
                 />
               </div>
-
               <div className="mb-4">
                 <label className="block font-gaming text-white mb-2">Total Score</label>
                 <input
@@ -213,7 +204,6 @@ const CreateTeam = () => {
               </div>
             </>
           )}
-
           {/* Save Button */}
           {showChallengeScores && (
             <button
@@ -230,6 +220,3 @@ const CreateTeam = () => {
 };
 
 export default CreateTeam;
-
-
-

@@ -14,7 +14,7 @@ const AdminDashboard = () => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // success | error
 
-  const API_BASE_URL = "https://techeshi-castle-backend.vercel.app";
+  const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     fetchTeams();

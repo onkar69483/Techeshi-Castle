@@ -10,7 +10,15 @@ const questionSchema = new mongoose.Schema({
         required: true,
     },
     question: {
+        type: String,
+        required: true,
+    },
+    options: {
         type: [String],
+        required: true,
+    },
+    solution: {
+        type: String,
         required: true,
     },
 });

@@ -2,7 +2,8 @@ const question = require("../models/question");
 
 const getRandomQuestions = async (req, res) => {
     try {
-        const {type} = req.query;
+        const { type } = req.query;
+        
         if(!type){
             return res.status(400).json({ error: 'Invalid input'});
         }
@@ -19,6 +20,7 @@ const getRandomQuestions = async (req, res) => {
         res.status(500).json({ error: "Failed to fetch questions" });
     }
 };
+
 
 module.exports = { getRandomQuestions };
 

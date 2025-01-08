@@ -1,8 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getCircuitSteps } = require('../controllers/circuitsController');
+const { getCircuitStep } = require("../controllers/circuitsController");
 
-router.get('/', getCircuitSteps );
+router.get("/", getCircuitStep);
 
 module.exports = router;
-

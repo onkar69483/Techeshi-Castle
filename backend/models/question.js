@@ -10,11 +10,11 @@ const questionSchema = new mongoose.Schema({
         required: true,
     },
     question: {
-        type: String,
+        type: [String],
         required: true,
-    }
-})
+    },
+});
 
-const question = mongoose.model("Team", questionSchema);
+const question = mongoose.model("Question", questionSchema);
 
 module.exports = question;

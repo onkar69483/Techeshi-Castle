@@ -6,12 +6,12 @@ const circuitSchema = new mongoose.Schema({
         required: true,
     },
     circuit_step: {
-        type: String,
+        type: [String],
         required: true,
     }
 })
 
-const Circuit = mongoose.model("circuitSchema", circuitSchema);
+const Circuit = mongoose.model("Circuit", circuitSchema);
 
 module.exports = Circuit;
 

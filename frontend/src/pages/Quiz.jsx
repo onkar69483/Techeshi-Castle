@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { ChevronRight, Trophy } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ChevronRight, Brain, Code, Trophy, Check } from 'lucide-react';
 
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
@@ -13,8 +12,7 @@ const Quiz = () => {
   const [quizComplete, setQuizComplete] = useState(false);
   const [quizType, setQuizType] = useState(null);
   const [showSolution, setShowSolution] = useState(false);
-  const [confirmAnswer, setConfirmAnswer] = useState(false);
-  const navigate = useNavigate();
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
 
   const fetchQuestions = async (type) => {
     try {
@@ -32,15 +30,16 @@ const Quiz = () => {
   const handleAnswerSelect = (answer) => {
     if (showSolution) return;
     setSelectedAnswer(answer);
-    setConfirmAnswer(true);
+    setIsAnswerSubmitted(false);
   };
 
-  const confirmAndSubmitAnswer = () => {
+  const handleSubmitAnswer = () => {
+    if (!selectedAnswer || isAnswerSubmitted) return;
+    setIsAnswerSubmitted(true);
+    setShowSolution(true);
     if (selectedAnswer === questions[currentQuestion].solution) {
       setScore(score + 1);
     }
-    setShowSolution(true);
-    setConfirmAnswer(false);
   };
 
   const handleNextQuestion = () => {
@@ -48,6 +47,7 @@ const Quiz = () => {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
       setShowSolution(false);
+      setIsAnswerSubmitted(false);
     } else {
       setQuizComplete(true);
     }
@@ -61,19 +61,8 @@ const Quiz = () => {
     setQuizType(null);
     setQuestions([]);
     setShowSolution(false);
+    setIsAnswerSubmitted(false);
   };
-
-  const handleExitQuiz = () => {
-  if (score > 0) {
-    localStorage.setItem('quizScore', score.toString());
-    navigate('/admin/create-team');
-  } else {
-    if (window.confirm('Are you sure you want to exit? Your progress will be lost.')) {
-      navigate('/admin/create-team');
-    }
-  }
-};
-
 
   const getAnswerButtonClass = (option) => {
     if (!showSolution) {
@@ -81,7 +70,7 @@ const Quiz = () => {
         ? 'bg-fuchsia-500/20 border-fuchsia-500'
         : 'bg-[#0A0A1F] border-violet-400/20 hover:border-fuchsia-500/50';
     }
-
+    
     if (option === questions[currentQuestion].solution) {
       return 'bg-green-500/20 border-green-500';
     }
@@ -94,21 +83,13 @@ const Quiz = () => {
   return (
     <div className="min-h-screen pt-24 pb-16 bg-game-dark">
       <div className="max-w-4xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl font-gaming text-center mb-8 bg-gradient-to-r from-game-purple to-game-pink text-transparent bg-clip-text"
-          >
-            Circuit Challenge Quiz
-          </motion.h1>
-          <button
-            onClick={handleExitQuiz}
-            className="px-6 py-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500/30 transition-all duration-300"
-          >
-            Exit Quiz
-          </button>
-        </div>
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-gaming text-center mb-8 bg-gradient-to-r from-game-purple to-game-pink text-transparent bg-clip-text"
+        >
+          Circuit Challenge Quiz
+        </motion.h1>
 
         {!quizType && !loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
@@ -172,31 +153,43 @@ const Quiz = () => {
                   </motion.button>
                 ))}
               </div>
-              {confirmAnswer && !showSolution && (
+            </div>
+            
+            <div className="space-y-4">
+              <motion.button
+                whileHover={{ scale: selectedAnswer && !isAnswerSubmitted ? 1.05 : 1 }}
+                whileTap={{ scale: selectedAnswer && !isAnswerSubmitted ? 0.95 : 1 }}
+                onClick={handleSubmitAnswer}
+                disabled={!selectedAnswer || isAnswerSubmitted}
+                className={`w-full py-3 rounded-lg font-gaming transition-all duration-300 ${
+                  selectedAnswer && !isAnswerSubmitted
+                    ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white'
+                    : 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                {isAnswerSubmitted ? (
+                  <span className="flex items-center justify-center">
+                    Submitted <Check className="ml-2 w-5 h-5" />
+                  </span>
+                ) : (
+                  'Submit Answer'
+                )}
+              </motion.button>
+
+              {showSolution && (
                 <motion.button
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={confirmAndSubmitAnswer}
-                  className="w-full py-3 mt-4 rounded-lg font-gaming bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
+                  onClick={handleNextQuestion}
+                  className="w-full py-3 rounded-lg font-gaming bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
                 >
-                  Submit Answer
+                  {currentQuestion === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                  <ChevronRight className="inline-block ml-2" />
                 </motion.button>
               )}
             </div>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleNextQuestion}
-              disabled={!showSolution}
-              className={`w-full py-3 rounded-lg font-gaming transition-all duration-300 ${
-                showSolution
-                  ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white'
-                  : 'bg-gray-700 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              {currentQuestion === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
-              <ChevronRight className="inline-block ml-2" />
-            </motion.button>
           </motion.div>
         )}
 

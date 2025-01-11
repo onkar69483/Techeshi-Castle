@@ -85,7 +85,7 @@ const CreateTeam = () => {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/teams`, {
         team_name: teamData.teamName,
         college: teamData.college,
-        contact: teamData.contact,
+        contact: Number(teamData.contact),
         challenge_1_score: teamData.challengeScores.challenge1,
         challenge_2_score: teamData.challengeScores.challenge2,
         challenge_3_score: teamData.challengeScores.challenge3,

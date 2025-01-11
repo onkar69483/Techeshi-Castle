@@ -18,13 +18,14 @@ const createTeam = async (req, res) => {
             challenge_1_score,
             challenge_2_score,
             challenge_3_score,
-            total_score,
             players,
         } = req.body;
 
-        if (!team_name || !college || !contact || !players || !total_score) {
+        if (!team_name || !college || !contact || !players) {
             return res.status(400).json({ error: "Missing required fields" });
         }
+
+        const total_score = challenge_1_score + challenge_2_score + challenge_3_score;
 
         const newTeam = new Team({
             team_name,

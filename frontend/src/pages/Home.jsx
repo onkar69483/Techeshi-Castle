@@ -12,24 +12,24 @@ const Home = () => {
   const events = [
     {
       title: "Circuit Showdown",
-      description: "Battle against time in this electronic puzzle challenge!",
+      description: "Test your electronic knowledge in this exciting circuit design challenge! Solve quiz questions to unlock circuit solutions, then bring them to life in TinkerCad. Teams will compete to build the most efficient circuits based on quiz solutions.",
       image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
       color: "from-violet-600 to-fuchsia-600",
-      icon: "🎮"
+      icon: "⚡"
     },
     {
-      title: "Robot Rampage",
-      description: "Command your robot through epic challenges!",
+      title: "Bullseye Battle",
+      description: "Take control of a remote-controlled turret in this precision shooting challenge! Use your points from Circuit Showdown to purchase ammunition and demonstrate your accuracy. Can you hit all targets with minimal resources?",
       color: "from-cyan-600 to-blue-600",
       image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
-      icon: "🤖"
+      icon: "🎯"
     },
     {
-      title: "Tech Titans Arena",
-      description: "Prove your worth in the ultimate electronics showdown!",
+      title: "Laser Labyrinth",
+      description: "Navigate through an intricate maze of laser beams in this ultimate test of precision and patience. Avoid triggers, beat the clock, and maintain your composure as you traverse through this challenging final level!",
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
       color: "from-rose-600 to-orange-600",
-      icon: "⚡"
+      icon: "🔮"
     }
   ];
 
@@ -143,7 +143,7 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* Enhanced Events Preview Section */}
+      {/* Updated Events Preview Section */}
       <section id="featured-events" className="py-20 px-4 bg-gradient-to-b from-[#0A0A1F] to-[#1A1A3F]">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -151,7 +151,7 @@ const Home = () => {
           transition={{ duration: 0.8 }}
           className="text-4xl md:text-5xl font-gaming text-center mb-16 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-transparent bg-clip-text"
         >
-          Featured Events
+          Challenge Levels
         </motion.h2>
 
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -170,6 +170,9 @@ const Home = () => {
                 alt={event.title}
                 className="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-110"
               />
+              <div className="absolute top-4 left-4 z-20 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                <span className="font-gaming text-white">Level {index + 1}</span>
+              </div>
               <div className="absolute top-4 right-4 z-20 text-4xl">
                 {event.icon}
               </div>
@@ -184,7 +187,7 @@ const Home = () => {
                   to="/events"
                   className="inline-block px-6 py-2 bg-white/10 backdrop-blur-md text-white rounded-full font-gaming text-sm hover:bg-white hover:text-game-darker transition-colors duration-300 border border-white/20"
                 >
-                  Learn More
+                  View Details
                 </Link>
               </div>
             </motion.div>

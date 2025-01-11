@@ -8,6 +8,7 @@ import AdminLogin from './pages/AdminLogin';
 import CreateTeam from './pages/CreateTeam';
 import Leaderboard from './pages/Leaderboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import Quiz from './pages/Quiz';
 
 const App = () => {
     return (
@@ -30,6 +31,7 @@ const App = () => {
                         </ProtectedRoute>
                     } />
                     <Route path="/leaderboard" element={<Leaderboard />} />
+                    <Route path="/quiz" element={<Quiz />} />
                 </Routes>
             </div>
         </BrowserRouter>

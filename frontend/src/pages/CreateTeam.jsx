@@ -17,19 +17,34 @@ const CreateTeam = () => {
   });
 
   const [showChallengeScores, setShowChallengeScores] = useState(true);
+  const [contactError, setContactError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const { challenge1, challenge2, challenge3 } = teamData.challengeScores;
-    const totalScore = challenge1 + challenge2 + challenge3;
+    const totalScore = Number(challenge1) + Number(challenge2) + Number(challenge3);
     setTeamData((prev) => ({ ...prev, totalScore }));
   }, [teamData.challengeScores]);
 
   const handleInputChange = (key, value) => {
-    setTeamData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    if (key === 'contact') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      if (numericValue.length > 10) {
+        setContactError('Phone number cannot exceed 10 digits');
+        return;
+      }
+      setContactError('');
+      setTeamData((prev) => ({
+        ...prev,
+        [key]: numericValue,
+      }));
+    } else {
+      setTeamData((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    }
   };
 
   const handlePlayerChange = (index, value) => {
@@ -53,11 +68,12 @@ const CreateTeam = () => {
   };
 
   const handleChallengeScoreChange = (key, value) => {
+    const numValue = value === '' ? 0 : Number(value);
     setTeamData((prev) => ({
       ...prev,
       challengeScores: {
         ...prev.challengeScores,
-        [key]: Number(value),
+        [key]: numValue,
       },
     }));
   };
@@ -82,16 +98,6 @@ const CreateTeam = () => {
       console.error('Error saving team:', error.response?.data || error.message);
       alert('Failed to save the team. Please try again.');
     }
-
-    const existingTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-    const newTeam = {
-      id: Math.max(...existingTeams.map((t) => t.id), 0) + 1,
-      ...teamData,
-    };
-
-    const updatedTeams = [...existingTeams, newTeam];
-    localStorage.setItem('teams', JSON.stringify(updatedTeams));
-    navigate('/admin');
   };
 
   return (

@@ -1,9 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Clock, MapPin, Calendar, Users } from "lucide-react";
+import { Timer, Target, Zap, Users, Calendar, MapPin } from "lucide-react";
 
-const EventCard = ({ title, description, image, index, location, time, date, capacity }) => {
+const EventCard = ({ title, description, rules = [], criteria = [], image, index, location, time, date, capacity }) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.2
@@ -21,7 +21,7 @@ const EventCard = ({ title, description, image, index, location, time, date, cap
       animate={inView ? "visible" : "hidden"}
       variants={variants}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="flex flex-col md:flex-row items-center gap-8 min-h-[60vh] p-8 bg-game-dark/50 rounded-2xl backdrop-blur-sm border border-game-purple/20 hover:border-game-pink/20 transition-all duration-500"
+      className="flex flex-col md:flex-row items-center gap-8 min-h-[70vh] p-8 bg-game-dark/50 rounded-2xl backdrop-blur-sm border border-game-purple/20 hover:border-game-pink/20 transition-all duration-500"
     >
       <div className={`w-full md:w-1/2 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
         <div className="relative group">
@@ -40,6 +40,12 @@ const EventCard = ({ title, description, image, index, location, time, date, cap
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
+          <div className="flex items-center gap-2 mb-2">
+            <div className="bg-game-purple/20 px-3 py-1 rounded-full">
+              <span className="text-game-purple font-gaming">Level {index + 1}</span>
+            </div>
+          </div>
+          
           <h3 className="text-4xl font-gaming font-bold mb-4 bg-gradient-to-r from-game-purple to-game-pink text-transparent bg-clip-text">
             {title}
           </h3>
@@ -50,7 +56,7 @@ const EventCard = ({ title, description, image, index, location, time, date, cap
               <span className="font-space">{location}</span>
             </div>
             <div className="flex items-center space-x-2 text-gray-300">
-              <Clock className="w-5 h-5 text-game-purple" />
+              <Timer className="w-5 h-5 text-game-purple" />
               <span className="font-space">{time}</span>
             </div>
             <div className="flex items-center space-x-2 text-gray-300">
@@ -67,22 +73,37 @@ const EventCard = ({ title, description, image, index, location, time, date, cap
             {description}
           </p>
 
-          <div className="flex space-x-4">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-game-purple to-game-pink rounded-full font-gaming text-white shadow-lg hover:shadow-game-purple/50 transition-all duration-300"
-            >
-              Register Now
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-transparent border border-game-purple hover:border-game-pink rounded-full font-gaming text-white shadow-lg hover:shadow-game-pink/50 transition-all duration-300"
-            >
-              Learn More
-            </motion.button>
+          <div className="space-y-4 mb-6">
+            {rules && rules.length > 0 && (
+              <div className="bg-game-purple/10 p-4 rounded-lg">
+                <h4 className="text-game-purple font-gaming mb-2">Rules</h4>
+                <ul className="list-disc list-inside text-gray-300 space-y-2">
+                  {rules.map((rule, i) => (
+                    <li key={i} className="font-space">{rule}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {criteria && criteria.length > 0 && (
+              <div className="bg-game-pink/10 p-4 rounded-lg">
+                <h4 className="text-game-pink font-gaming mb-2">Judging Criteria</h4>
+                <ul className="list-disc list-inside text-gray-300 space-y-2">
+                  {criteria.map((criterion, i) => (
+                    <li key={i} className="font-space">{criterion}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-3 bg-gradient-to-r from-game-purple to-game-pink rounded-full font-gaming text-white shadow-lg hover:shadow-game-purple/50 transition-all duration-300"
+          >
+            Register Now
+          </motion.button>
         </motion.div>
       </div>
     </motion.div>
@@ -93,30 +114,62 @@ const Events = () => {
   const events = [
     {
       title: "Circuit Showdown",
-      description: "Enter the digital arena where electronics meet gaming! Design and debug complex circuits against the clock. Face increasingly challenging levels that test your knowledge of electronic components and circuit design. Will you emerge as the ultimate circuit champion?",
+      description: "Test your electronic knowledge in this exciting circuit design challenge! Solve quiz questions to unlock circuit solutions, then bring them to life in TinkerCad.",
       image: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-      location: "CL-9 Digital Arena",
-      time: "18:00 - 22:00",
+      location: "Digital Lab",
+      time: "2 Hours",
       date: "January 15, 2025",
-      capacity: "150 Participants"
+      capacity: "Teams of 3-4",
+      rules: [
+        "Open to all enrolled college students",
+        "Teams of 3-4 members",
+        "Complete quiz to unlock circuit solutions",
+        "Build circuits in TinkerCad based on solutions"
+      ],
+      criteria: [
+        "Circuit functionality evaluation",
+        "Number of questions needed for completion",
+        "Time taken as tiebreaker"
+      ]
     },
     {
-      title: "Robot Rampage",
-      description: "Command your custom-built robot through a series of intense challenges! Navigate obstacle courses, complete tasks, and battle other robots in this high-stakes competition. Combine programming skills with electronic wizardry to claim victory.",
+      title: "Bullseye Battle",
+      description: "Take control of a remote-controlled turret in this precision shooting challenge. Use your points wisely to purchase ammunition and demonstrate your accuracy!",
       image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e",
-      location: "CL-9 Battle Zone",
-      time: "14:00 - 20:00",
-      date: "January 22, 2025",
-      capacity: "100 Teams"
+      location: "Battle Arena",
+      time: "1.5 Hours",
+      date: "January 15, 2025",
+      capacity: "Individual",
+      rules: [
+        "Use remote-controlled turret",
+        "Purchase bullets with points from Level 1",
+        "Knock down all targets within time limit"
+      ],
+      criteria: [
+        "Number of bullets required for completion",
+        "Efficiency of point usage",
+        "Time taken to clear all targets"
+      ]
     },
     {
-      title: "Tech Titans Arena",
-      description: "The ultimate electronics trivia battleground! Compete in real-time against other teams, solving electronic puzzles, identifying components, and answering challenging questions. Quick thinking and deep knowledge are your weapons in this fast-paced showdown.",
+      title: "Laser Labyrinth",
+      description: "Navigate through an intricate maze of laser beams in this ultimate test of precision and patience. Can you make it through without triggering the alarm?",
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5",
-      location: "CL-9 Main Hall",
-      time: "16:00 - 21:00",
-      date: "January 29, 2025",
-      capacity: "200 Participants"
+      location: "Main Arena",
+      time: "1 Hour",
+      date: "January 15, 2025",
+      capacity: "Individual",
+      rules: [
+        "Navigate through laser maze",
+        "Avoid triggering alarms",
+        "Complete course within time limit"
+      ],
+      criteria: [
+        "Time taken to complete maze",
+        "Number of alarms triggered",
+        "Combined points from all levels determine winners",
+        "Real-time leaderboard updates on website"
+      ]
     }
   ];
 
@@ -128,7 +181,7 @@ const Events = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-6xl font-gaming font-bold text-center mb-6 bg-gradient-to-r from-game-purple to-game-pink text-transparent bg-clip-text"
         >
-          Epic Events Await
+          Circuit Showdown Championship
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -136,7 +189,7 @@ const Events = () => {
           transition={{ delay: 0.2 }}
           className="text-gray-400 text-center mb-16 text-xl font-space max-w-2xl mx-auto"
         >
-          Join us for a series of electrifying events that push the boundaries of technology and innovation
+          Test your skills in three challenging levels of electronic mastery and precision
         </motion.p>
         <div className="space-y-32">
           {events.map((event, index) => (

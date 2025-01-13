@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { ChevronRight, Brain, Code, Trophy, Check, Zap } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Quiz = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -16,6 +19,21 @@ const Quiz = () => {
   const [circuit, setCircuit] = useState(null);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showCurrentStep, setShowCurrentStep] = useState(false);
+
+  const returnTo = location.state?.returnTo || '/';
+
+  useEffect(() => {
+    if (quizComplete) {
+      // Add a slight delay before redirecting to ensure the completion screen is shown
+      const timer = setTimeout(() => {
+        navigate(returnTo, {
+          state: { quizScore: score }
+        });
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [quizComplete, score, navigate, returnTo]);
 
   const fetchQuestions = async (type) => {
     try {
@@ -45,7 +63,7 @@ const Quiz = () => {
     if (isCorrect) {
       setScore(score + 1);
       setShowCurrentStep(true);
-      if(currentStepIndex == circuit.circuit_step.length - 1){
+      if (currentStepIndex === circuit?.circuit_step?.length - 1) {
         setQuizComplete(true);
       }
     }
@@ -86,7 +104,7 @@ const Quiz = () => {
   };
 
   const handleNextStep = () => {
-    if (currentStepIndex < circuit.circuit_step.length - 1) {
+    if (currentStepIndex < circuit?.circuit_step?.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
       handleNextQuestion();
     } else {
@@ -236,7 +254,7 @@ const Quiz = () => {
                     <h3 className="text-xl font-gaming text-white">Circuit Step {currentStepIndex + 1}</h3>
                   </div>
                   <p className="text-gray-300 font-space text-lg mb-6">
-                    {circuit.circuit_step[currentStepIndex]}
+                    {circuit?.circuit_step[currentStepIndex]}
                   </p>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -285,14 +303,9 @@ const Quiz = () => {
                   ? 'Great job! Keep practicing!' 
                   : 'Keep trying, you can do better!'}
             </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleRestartQuiz}
-              className="px-8 py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full font-gaming text-white"
-            >
-              Try Another Quiz
-            </motion.button>
+            <p className="text-lg font-space text-gray-300 mb-4">
+              Redirecting back to form...
+            </p>
           </motion.div>
         )}
       </div>

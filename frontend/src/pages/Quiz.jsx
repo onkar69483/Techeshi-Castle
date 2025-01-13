@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { ChevronRight, Brain, Code, Trophy, Check } from 'lucide-react';
+import { ChevronRight, Brain, Code, Trophy, Check, Zap } from 'lucide-react';
 
 const Quiz = () => {
   const [questions, setQuestions] = useState([]);
@@ -13,6 +13,9 @@ const Quiz = () => {
   const [quizType, setQuizType] = useState(null);
   const [showSolution, setShowSolution] = useState(false);
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
+  const [circuit, setCircuit] = useState(null);
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [showCurrentStep, setShowCurrentStep] = useState(false);
 
   const fetchQuestions = async (type) => {
     try {
@@ -37,8 +40,14 @@ const Quiz = () => {
     if (!selectedAnswer || isAnswerSubmitted) return;
     setIsAnswerSubmitted(true);
     setShowSolution(true);
-    if (selectedAnswer === questions[currentQuestion].solution) {
+    
+    const isCorrect = selectedAnswer === questions[currentQuestion].solution;
+    if (isCorrect) {
       setScore(score + 1);
+      setShowCurrentStep(true);
+      if(currentStepIndex == circuit.circuit_step.length - 1){
+        setQuizComplete(true);
+      }
     }
   };
 
@@ -48,6 +57,7 @@ const Quiz = () => {
       setSelectedAnswer(null);
       setShowSolution(false);
       setIsAnswerSubmitted(false);
+      setShowCurrentStep(false);
     } else {
       setQuizComplete(true);
     }
@@ -62,6 +72,26 @@ const Quiz = () => {
     setQuestions([]);
     setShowSolution(false);
     setIsAnswerSubmitted(false);
+    setCurrentStepIndex(0);
+    setShowCurrentStep(false);
+  };
+
+  const handleCircuitSelect = async (circuitNumber) => {
+    try {
+      const response = await axios.get(`https://techeshi-castle-backend.vercel.app/circuit?circuit_number=${circuitNumber}`);
+      setCircuit(response.data);
+    } catch (error) {
+      console.error('Error fetching circuit:', error);
+    }
+  };
+
+  const handleNextStep = () => {
+    if (currentStepIndex < circuit.circuit_step.length - 1) {
+      setCurrentStepIndex(currentStepIndex + 1);
+      handleNextQuestion();
+    } else {
+      setQuizComplete(true);
+    }
   };
 
   const getAnswerButtonClass = (option) => {
@@ -91,7 +121,26 @@ const Quiz = () => {
           Circuit Challenge Quiz
         </motion.h1>
 
-        {!quizType && !loading && (
+        {!circuit && (
+          <div className="text-center">
+            <h2 className="text-2xl text-white font-space mb-6">Select a Circuit</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {[1, 2, 3].map((circuitNumber) => (
+                <motion.button
+                  key={circuitNumber}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleCircuitSelect(circuitNumber)}
+                  className="p-4 bg-gradient-to-r from-game-purple/20 to-game-pink/20 rounded-xl border border-game-purple/30 hover:border-game-pink/50 transition-all duration-300"
+                >
+                  Circuit {circuitNumber}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {circuit && !quizType && !loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -176,7 +225,32 @@ const Quiz = () => {
                 )}
               </motion.button>
 
-              {showSolution && (
+              {showCurrentStep && showSolution && selectedAnswer === questions[currentQuestion].solution && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-6 p-6 bg-game-card rounded-xl border border-game-purple/20"
+                >
+                  <div className="flex items-center mb-4">
+                    <Zap className="w-6 h-6 text-yellow-400 mr-2" />
+                    <h3 className="text-xl font-gaming text-white">Circuit Step {currentStepIndex + 1}</h3>
+                  </div>
+                  <p className="text-gray-300 font-space text-lg mb-6">
+                    {circuit.circuit_step[currentStepIndex]}
+                  </p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleNextStep}
+                    className="w-full py-3 rounded-lg font-gaming bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
+                  >
+                    Next Question
+                    <ChevronRight className="inline-block ml-2" />
+                  </motion.button>
+                </motion.div>
+              )}
+
+              {showSolution && selectedAnswer !== questions[currentQuestion].solution && (
                 <motion.button
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -185,7 +259,7 @@ const Quiz = () => {
                   onClick={handleNextQuestion}
                   className="w-full py-3 rounded-lg font-gaming bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white"
                 >
-                  {currentQuestion === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+                  Next Question
                   <ChevronRight className="inline-block ml-2" />
                 </motion.button>
               )}

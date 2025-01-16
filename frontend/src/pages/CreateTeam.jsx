@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 const CreateTeam = () => {
@@ -17,19 +17,59 @@ const CreateTeam = () => {
   });
 
   const [showChallengeScores, setShowChallengeScores] = useState(true);
+  const [contactError, setContactError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [challenge1Completed, setChallenge1Completed] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Retrieve saved form data when component mounts
+    const savedFormData = sessionStorage.getItem('createTeamFormData');
+    if (savedFormData) {
+      setTeamData(JSON.parse(savedFormData));
+    }
+
+    // Check for quiz score from location state
+    if (location.state?.quizScore !== undefined) {
+      const score = location.state.quizScore;
+      setTeamData(prev => ({
+        ...prev,
+        challengeScores: {
+          ...prev.challengeScores,
+          challenge1: score
+        }
+      }));
+      setChallenge1Completed(true);
+      // Clear the session storage after setting the score
+      sessionStorage.removeItem('createTeamFormData');
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const { challenge1, challenge2, challenge3 } = teamData.challengeScores;
-    const totalScore = challenge1 + challenge2 + challenge3;
+    const totalScore = Number(challenge1) + Number(challenge2) + Number(challenge3);
     setTeamData((prev) => ({ ...prev, totalScore }));
   }, [teamData.challengeScores]);
 
   const handleInputChange = (key, value) => {
-    setTeamData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    if (key === 'contact') {
+      const numericValue = value.replace(/[^0-9]/g, '');
+      if (numericValue.length > 10) {
+        setContactError('Phone number cannot exceed 10 digits');
+        return;
+      }
+      setContactError('');
+      setTeamData((prev) => ({
+        ...prev,
+        [key]: numericValue,
+      }));
+    } else {
+      setTeamData((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    }
   };
 
   const handlePlayerChange = (index, value) => {
@@ -53,23 +93,31 @@ const CreateTeam = () => {
   };
 
   const handleChallengeScoreChange = (key, value) => {
+    const numValue = value === '' ? 0 : Number(value);
     setTeamData((prev) => ({
       ...prev,
       challengeScores: {
         ...prev.challengeScores,
-        [key]: Number(value),
+        [key]: numValue,
       },
     }));
   };
 
+  const handleStartQuiz = () => {
+    // Save current form data to session storage
+    sessionStorage.setItem('createTeamFormData', JSON.stringify(teamData));
+    navigate('/quiz', { state: { returnTo: '/admin/create-team' } });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/teams`, {
         team_name: teamData.teamName,
         college: teamData.college,
-        contact: teamData.contact,
+        contact: Number(teamData.contact),
         challenge_1_score: teamData.challengeScores.challenge1,
         challenge_2_score: teamData.challengeScores.challenge2,
         challenge_3_score: teamData.challengeScores.challenge3,
@@ -77,21 +125,14 @@ const CreateTeam = () => {
         players: teamData.players,
       });
       console.log('Team saved:', response.data);
+      sessionStorage.removeItem('createTeamFormData');
       navigate('/admin');
     } catch (error) {
       console.error('Error saving team:', error.response?.data || error.message);
       alert('Failed to save the team. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const existingTeams = JSON.parse(localStorage.getItem('teams') || '[]');
-    const newTeam = {
-      id: Math.max(...existingTeams.map((t) => t.id), 0) + 1,
-      ...teamData,
-    };
-
-    const updatedTeams = [...existingTeams, newTeam];
-    localStorage.setItem('teams', JSON.stringify(updatedTeams));
-    navigate('/admin');
   };
 
   return (
@@ -133,6 +174,9 @@ const CreateTeam = () => {
               className="w-full px-4 py-3 bg-game-dark rounded-lg border border-game-purple/20 focus:border-game-pink/50 focus:outline-none text-white"
               required
             />
+            {contactError && (
+              <p className="text-red-500 text-sm mt-1">{contactError}</p>
+            )}
           </div>
           {/* Players */}
           <div className="mb-4">
@@ -161,15 +205,23 @@ const CreateTeam = () => {
           {showChallengeScores && (
             <>
               <div className="mb-4">
-                <label className="block font-gaming text-white mb-2">Challenge 1 Score</label>
-                <input
-                  type="number"
-                  value={teamData.challengeScores.challenge1}
-                  onChange={(e) =>
-                    handleChallengeScoreChange('challenge1', e.target.value)
-                  }
-                  className="w-full px-4 py-3 bg-game-dark rounded-lg border border-game-purple/20 focus:border-game-pink/50 focus:outline-none text-white"
-                />
+                <label className="block font-gaming text-white mb-2">Challenge 1</label>
+                {!challenge1Completed ? (
+                  <button
+                    type="button"
+                    onClick={handleStartQuiz}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-game-purple to-game-pink rounded-lg font-gaming text-white hover:opacity-90 transition-opacity"
+                  >
+                    Start Quiz
+                  </button>
+                ) : (
+                  <input
+                    type="number"
+                    value={teamData.challengeScores.challenge1}
+                    disabled
+                    className="w-full px-4 py-3 bg-game-dark rounded-lg border border-game-purple/20 focus:border-game-pink/50 focus:outline-none text-white"
+                  />
+                )}
               </div>
               <div className="mb-4">
                 <label className="block font-gaming text-white mb-2">Challenge 2 Score</label>
@@ -208,9 +260,10 @@ const CreateTeam = () => {
           {showChallengeScores && (
             <button
               type="submit"
-              className="w-full px-6 py-3 bg-gradient-to-r from-game-purple to-game-pink rounded-lg font-gaming text-white hover:opacity-90 transition-opacity"
+              disabled={isSubmitting}
+              className="w-full px-6 py-3 bg-gradient-to-r from-game-purple to-game-pink rounded-lg font-gaming text-white hover:opacity-90 transition-opacity disabled:opacity-50"
             >
-              Save Team
+              {isSubmitting ? 'Saving...' : 'Save Team'}
             </button>
           )}
         </form>

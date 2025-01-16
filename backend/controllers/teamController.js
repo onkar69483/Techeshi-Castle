@@ -10,7 +10,6 @@ const getTeams = async (req, res) => {
 };
 
 const createTeam = async (req, res) => {
-    // console.log(req.body);
     try {
         const {
             team_name,
@@ -19,12 +18,15 @@ const createTeam = async (req, res) => {
             challenge_1_score,
             challenge_2_score,
             challenge_3_score,
-            total_score,
             players,
         } = req.body;
-        if (!team_name || !college || !contact || !players || !total_score) {
+
+        if (!team_name || !college || !contact || !players) {
             return res.status(400).json({ error: "Missing required fields" });
         }
+
+        const total_score = challenge_1_score + challenge_2_score + challenge_3_score;
+
         const newTeam = new Team({
             team_name,
             college,
@@ -35,9 +37,11 @@ const createTeam = async (req, res) => {
             total_score,
             players,
         });
+
         const savedTeam = await newTeam.save();
         res.status(201).json(savedTeam);
     } catch (error) {
+        console.error("Error creating team:", error.message);
         res.status(500).json({ error: "Failed to create team", details: error.message });
     }
 };

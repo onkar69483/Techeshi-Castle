@@ -8,6 +8,10 @@ const circuitSchema = new mongoose.Schema({
     circuit_step: {
         type: [String],
         required: true,
+    },
+    link: {
+        type: String,
+        required: true,
     }
 })
 

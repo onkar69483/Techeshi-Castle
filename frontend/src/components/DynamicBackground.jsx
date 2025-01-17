@@ -1,79 +1,85 @@
-import React, { useState, useEffect } from 'react';
-
-const backgrounds = [
-  // Simple grid
-  {
-    background: `linear-gradient(to right, rgba(255, 255, 255, 0.1) 4px, transparent 4px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 4px, transparent 4px)`,
-    backgroundSize: '150px 150px'
-  }, 
-  // Hexagonal Pattern
-  {
-    background: `
-      repeating-linear-gradient(
-        60deg,
-        rgba(255, 255, 255, 0.1) 0,
-        rgba(255, 255, 255, 0.1) 2px,
-        transparent 2px,
-        transparent 22px
-      ),
-      repeating-linear-gradient(
-        120deg,
-        rgba(255, 255, 255, 0.1) 0,
-        rgba(255, 255, 255, 0.1) 2px,
-        transparent 2px,
-        transparent 22px
-      ),
-      repeating-linear-gradient(
-        0deg,
-        rgba(255, 255, 255, 0.1) 0,
-        rgba(255, 255, 255, 0.1) 2px,
-        transparent 2px,
-        transparent 22px
-      )
-    `,
-    backgroundSize: '38px 66px',
-  },
-  // Dots Pattern
-  {
-    background: `
-      radial-gradient(circle, rgba(255, 255, 255, 0.3) 2px, transparent 2px),
-      radial-gradient(circle, rgba(255, 255, 255, 0.3) 2px, transparent 2px)
-    `,
-    backgroundSize: '40px 40px',
-    backgroundPosition: '0 0, 20px 20px',
-  },
-];
+import React, { useEffect, useRef } from 'react';
 
 const DynamicBackground = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % backgrounds.length);
-    }, 5000); // Change background every 10 seconds
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId;
 
-    return () => clearInterval(interval);
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.color = `rgba(${Math.random() * 100 + 155}, ${Math.random() * 100 + 155}, 255, ${Math.random() * 0.3 + 0.2})`;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        if (this.y < 0) this.y = canvas.height;
+      }
+
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const init = () => {
+      particles = [];
+      const numberOfParticles = Math.floor((canvas.width * canvas.height) / 15000);
+      for (let i = 0; i < numberOfParticles; i++) {
+        particles.push(new Particle());
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    resizeCanvas();
+    init();
+    animate();
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      init();
+    });
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', resizeCanvas);
+    };
   }, []);
 
   return (
-    <div
-      className="absolute inset-0"
-      style={{
-        ...backgrounds[currentIndex],
-        transition: 'background 1s ease',
-      }}
-    >
-      <style>
-        {`
-          @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}
-      </style>
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 w-full h-full"
+      style={{ background: 'linear-gradient(to bottom, #0A0A1F, #1A1A3F)' }}
+    />
   );
 };
 

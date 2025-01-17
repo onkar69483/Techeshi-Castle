@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { Trophy, Medal, Award } from "lucide-react";
 
 const Leaderboard = () => {
   const [scores, setScores] = useState([]);
@@ -9,30 +10,25 @@ const Leaderboard = () => {
 
   const fetchTeams = async () => {
     try {
-      // Add error handling for missing environment variable
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       if (!backendUrl) {
         throw new Error("Backend URL not configured. Please check your environment variables.");
       }
 
-      // Add proper headers to ensure JSON response
       const response = await axios.get(`${backendUrl}/teams`, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        // Add validation for the response
         validateStatus: (status) => {
           return status >= 200 && status < 300;
         },
       });
 
-      // Add type checking and validation
       if (!response.data) {
         throw new Error("No data received from server");
       }
 
-      // Handle both array and object responses
       const teamsData = Array.isArray(response.data) ? response.data : 
                        (response.data.teams ? response.data.teams : null);
 
@@ -53,7 +49,6 @@ const Leaderboard = () => {
     } catch (err) {
       console.error("Error fetching teams:", err);
       
-      // Provide more specific error messages
       if (err.response?.status === 404) {
         setError("API endpoint not found. Please check the server configuration.");
       } else if (err.response?.status === 500) {
@@ -70,42 +65,56 @@ const Leaderboard = () => {
 
   useEffect(() => {
     fetchTeams();
-    // Polling interval for live updates
     const interval = setInterval(fetchTeams, 5000);
-    
-    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
-  // Loading skeleton component
   const LoadingSkeleton = () => (
-    <div className="animate-pulse">
+    <div className="animate-pulse space-y-4">
       {[...Array(5)].map((_, i) => (
         <div key={i} className="border-b border-game-purple/10">
-          <div className="flex px-6 py-4">
-            <div className="w-1/4 h-4 bg-game-purple/20 rounded"></div>
+          <div className="flex px-6 py-6">
+            <div className="w-1/4 h-6 bg-game-purple/20 rounded"></div>
+            <div className="w-1/2 h-6 bg-game-purple/10 rounded ml-4"></div>
           </div>
         </div>
       ))}
     </div>
   );
 
+  const getRankIcon = (rank) => {
+    switch (rank) {
+      case 1:
+        return <Trophy className="w-6 h-6 text-yellow-400" />;
+      case 2:
+        return <Medal className="w-6 h-6 text-gray-300" />;
+      case 3:
+        return <Award className="w-6 h-6 text-amber-600" />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="pt-24 pb-16 min-h-screen">
+    <div className="pt-24 pb-16 min-h-screen bg-gradient-to-b from-game-dark to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-game-purple to-game-pink text-transparent bg-clip-text">
+        <motion.h2 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-bold text-center mb-12 bg-gradient-to-r from-game-purple via-game-pink to-game-purple bg-size-200 animate-gradient-x text-transparent bg-clip-text"
+        >
           Live Leaderboard
-        </h2>
+        </motion.h2>
         
-        <div className="bg-game-dark/50 rounded-lg border border-game-purple/20">
+        <div className="bg-game-dark/80 backdrop-blur-lg rounded-xl border border-game-purple/30 shadow-2xl shadow-game-purple/10">
           {loading ? (
             <LoadingSkeleton />
           ) : error ? (
-            <div className="text-center py-6">
-              <p className="text-red-500">{error}</p>
+            <div className="text-center py-12">
+              <p className="text-red-400">{error}</p>
               <button
                 onClick={fetchTeams}
-                className="mt-4 px-4 py-2 bg-game-purple/20 hover:bg-game-purple/30 rounded-md transition-colors"
+                className="mt-6 px-6 py-3 bg-game-purple/20 hover:bg-game-purple/30 rounded-lg transition-all duration-300 hover:scale-105 focus:ring-2 focus:ring-game-purple/50 outline-none"
               >
                 Retry
               </button>
@@ -115,15 +124,15 @@ const Leaderboard = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-game-purple/20">
-                    <th className="px-6 py-3 text-left">Rank</th>
-                    <th className="px-6 py-3 text-left">Team</th>
-                    <th className="px-6 py-3 text-left">Score</th>
+                    <th className="px-6 py-4 text-left text-game-purple">Rank</th>
+                    <th className="px-6 py-4 text-left text-game-purple">Team</th>
+                    <th className="px-6 py-4 text-left text-game-purple">Score</th>
                   </tr>
                 </thead>
                 <tbody>
                   {scores.length === 0 ? (
                     <tr>
-                      <td colSpan="3" className="px-6 py-4 text-center text-gray-400">
+                      <td colSpan="3" className="px-6 py-8 text-center text-gray-400">
                         No teams available
                       </td>
                     </tr>
@@ -131,14 +140,25 @@ const Leaderboard = () => {
                     scores.map((score, index) => (
                       <motion.tr
                         key={index}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="border-b border-game-purple/10"
+                        className={`border-b border-game-purple/10 hover:bg-game-purple/5 transition-colors ${
+                          score.rank <= 3 ? 'bg-game-purple/10' : ''
+                        }`}
                       >
-                        <td className="px-6 py-4">{score.rank}</td>
-                        <td className="px-6 py-4">{score.team}</td>
-                        <td className="px-6 py-4">{score.score}</td>
+                        <td className="px-6 py-6 flex items-center gap-3">
+                          {getRankIcon(score.rank)}
+                          <span className={`font-semibold ${score.rank <= 3 ? 'text-game-pink' : ''}`}>
+                            #{score.rank}
+                          </span>
+                        </td>
+                        <td className="px-6 py-6 font-medium">{score.team}</td>
+                        <td className="px-6 py-6">
+                          <span className="bg-game-purple/20 px-4 py-1 rounded-full">
+                            {score.score.toLocaleString()}
+                          </span>
+                        </td>
                       </motion.tr>
                     ))
                   )}

@@ -1,60 +1,105 @@
 import React from 'react';
-import { Link } from 'react-router-dom';  // Use react-router-dom for routing in React
 
 const Footer = () => {
   return (
-    <footer className="py-8 md:py-12 px-4 bg-[#0A0A1F] border-t border-white/10">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="space-y-4">
-            <h3 className="text-xl md:text-2xl font-gaming bg-gradient-to-r from-violet-500 to-fuchsia-500 text-transparent bg-clip-text">
-              Techeshi's Castle
-            </h3>
-            <p className="text-gray-400 font-space text-sm">
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand Section */}
+          <div className="col-span-1">
+            <h2 className="text-2xl font-bold mb-4">Techeshi's Castle</h2>
+            <p className="text-gray-400">
               Where technology meets competitive gaming spirit.
             </p>
           </div>
-          <div className="space-y-4">
-            <h4 className="text-lg font-gaming text-white">Quick Links</h4>
-            <ul className="space-y-2 text-gray-400 font-space">
-              <li><Link to="/events" className="hover:text-violet-400 transition-colors">Events</Link></li>
-              <li><Link to="/leaderboard" className="hover:text-violet-400 transition-colors">Leaderboard</Link></li>
-              <li><Link to="/schedule" className="hover:text-violet-400 transition-colors">Schedule</Link></li>
-              <li><Link to="/register" className="hover:text-violet-400 transition-colors">Register</Link></li>
+
+          {/* Quick Links Section */}
+          <div className="col-span-1">
+            <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
+            <ul className="space-y-2">
+              <li><a href="/events" className="text-gray-400 hover:text-white">Events</a></li>
+              <li><a href="/leaderboard" className="text-gray-400 hover:text-white">Leaderboard</a></li>
+              <li><a href="/admin" className="text-gray-400 hover:text-white">admin</a></li>
             </ul>
           </div>
-          <div className="space-y-4">
-            <h4 className="text-lg font-gaming text-white">Contact</h4>
-            <ul className="space-y-2 text-gray-400 font-space">
-              <li>Email: info@techeshi.com</li>
-              <li>Discord: Techeshi's Castle</li>
-              <li>Twitter: @TecheshiCastle</li>
+
+          {/* Contact Section */}
+          <div className="col-span-1">
+            <h3 className="text-xl font-semibold mb-4">Contact</h3>
+            <ul className="space-y-2">
+              <li>
+                <a 
+                  href="https://www.instagram.com/rotonity?igsh=MXltOWt3ZzFoYTUx" 
+                  className="text-gray-400 hover:text-white"
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Rotonity Instagram
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://www.instagram.com/symbiosis.acm/" 
+                  className="text-gray-400 hover:text-white"
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  SIT ACM Student Chapter
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://discord.gg/techeshi" 
+                  className="text-gray-400 hover:text-white"
+                >
+                  Discord: Techeshi's Castle
+                </a>
+              </li>
             </ul>
           </div>
-          <div className="space-y-4">
-            <h4 className="text-lg font-gaming text-white">Newsletter</h4>
-            <form className="flex flex-col sm:flex-row">
+
+          {/* Newsletter Section */}
+          <div className="col-span-1">
+            <h3 className="text-xl font-semibold mb-4">Newsletter</h3>
+            <div className="flex">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="px-4 py-2 bg-white/5 border border-white/10 rounded-lg sm:rounded-r-none focus:outline-none focus:border-violet-500 text-white w-full"
+                className="bg-gray-800 text-white px-4 py-2 rounded-l focus:outline-none"
               />
-              <button 
-                type="submit"
-                className="mt-2 sm:mt-0 px-4 py-2 bg-violet-600 rounded-lg sm:rounded-l-none hover:bg-violet-700 transition-colors w-full sm:w-auto"
-              >
+              <button className="bg-blue-600 px-4 py-2 rounded-r hover:bg-blue-700 transition-colors">
                 Subscribe
               </button>
-            </form>
+            </div>
           </div>
         </div>
-        <div className="mt-8 md:mt-12 pt-8 border-t border-white/10 text-center text-gray-400 font-space text-sm">
-          © {new Date().getFullYear()} Rotonity & ACM. Crafted with precision by{' '}
-          <a
-            href="https://sachinmhetre.vercel.app/"
-            target="_blank"
+
+        {/* Copyright Section */}
+        <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+          © {new Date().getFullYear()} {' '}
+          <a 
+            href="https://www.instagram.com/rotonity?igsh=MXltOWt3ZzFoYTUx" 
+            className="font-semibold hover:text-white"
+            target="_blank" 
             rel="noopener noreferrer"
-            className="text-gray-200 hover:text-gray-100 transition-colors duration-200"
+          >
+            Rotonity
+          </a>
+          {' '}&{' '}
+          <a 
+            href="https://www.instagram.com/symbiosis.acm/" 
+            className="font-semibold hover:text-white"
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            ACM
+          </a>
+          . Crafted with precision by{' '}
+          <a 
+            href="https://github.com/sachinl0har" 
+            className="font-semibold hover:text-white"
+            target="_blank" 
+            rel="noopener noreferrer"
           >
             Sachin Mhetre
           </a>

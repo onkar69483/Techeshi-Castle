@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Footer from '../components/Footer';
 import { ChevronDown, Users, Calendar, Crown, Star, Shield, Trophy } from 'lucide-react';
 import DynamicBackground from "../components/DynamicBackground";
+import JoinBattleModal from "../components/JoinBattleModal";
 import axios from "axios";
 
 const Home = () => {
@@ -34,6 +35,7 @@ const Home = () => {
   ];
 
   const [leaderboard, setLeaderboard] = useState([]);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   const fetchTeams = async () => {
     try {
@@ -179,57 +181,58 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#0A0A1F] text-white overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 z-0">
-          <DynamicBackground />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A1F] via-[#1A1A3F] to-[#0A0A1F] opacity-90" />
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{ duration: 20, repeat: Infinity }}
-            className="w-full h-full bg-[url('/api/placeholder/1920/1080')] bg-cover bg-center opacity-20"
-          />
-        </div>
+<section className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+  {/* Background Layers */}
+  <div className="absolute inset-0 w-full h-full">
+    <DynamicBackground />
+    <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A1F]/50 via-[#1A1A3F]/50 to-[#0A0A1F]/50 pointer-events-none" />
+  </div>
 
-        <div className="relative z-10 text-center max-w-5xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, type: "spring" }}
-            className="text-4xl sm:text-6xl md:text-8xl font-gaming font-bold mb-6 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-500 bg-clip-text text-transparent animate-gradient"
-          >
-            Techeshi's Castle
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, type: "spring" }}
-            className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 font-space px-4"
-          >
-            Where Electronics Meet Gaming Excellence
-          </motion.p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full font-gaming text-white text-base sm:text-lg shadow-xl hover:shadow-violet-500/50 transition-all duration-300 border border-violet-400/20"
-          >
-            Join the Battle
-          </motion.button>
-        </div>
+  {/* Content */}
+  <div className="relative z-10 text-center max-w-5xl mx-auto">
+    <motion.h1
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, type: "spring" }}
+      className="text-4xl sm:text-6xl md:text-8xl font-gaming font-bold mb-6 bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-500 bg-clip-text text-transparent animate-gradient"
+    >
+      Techeshi's Castle
+    </motion.h1>
+    <motion.p
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.2, type: "spring" }}
+      className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 font-space px-4"
+    >
+      Where Electronics Meet Gaming Excellence
+    </motion.p>
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={() => setIsJoinModalOpen(true)}
+      className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full font-gaming text-white text-base sm:text-lg shadow-xl hover:shadow-violet-500/50 transition-all duration-300 border border-violet-400/20"
+    >
+      Join the Battle
+    </motion.button>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="absolute bottom-8"
-        >
-          <a href="#featured-events">
-            <ChevronDown className="w-8 h-8 sm:w-12 sm:h-12 text-white/50 animate-bounce" />
-          </a>
-        </motion.div>
-      </section>
+    {/* Add the modal component */}
+    <JoinBattleModal 
+      isOpen={isJoinModalOpen} 
+      onClose={() => setIsJoinModalOpen(false)} 
+    />
+  </div>
+
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 1, delay: 1 }}
+    className="absolute bottom-8 z-10"
+  >
+    <a href="#featured-events">
+      <ChevronDown className="w-8 h-8 sm:w-12 sm:h-12 text-white/50 animate-bounce" />
+    </a>
+  </motion.div>
+</section>
 
       {/* Events Preview Section */}
       <section id="featured-events" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#0A0A1F] to-[#1A1A3F]">

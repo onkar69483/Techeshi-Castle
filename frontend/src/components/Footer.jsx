@@ -96,7 +96,7 @@ const Footer = () => {
           </a>
           . Crafted with precision by{' '}
           <a 
-            href="https://github.com/sachinl0har" 
+            href="https://sachinmhetre.vercel.app/" 
             className="font-semibold hover:text-white"
             target="_blank" 
             rel="noopener noreferrer"

@@ -100,6 +100,9 @@ const EventCard = ({ title, description, rules = [], criteria = [], image, index
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              window.location.href = 'https://docs.google.com/forms/d/e/1FAIpQLSeNCnSc5CyJ633J59IrS1UZlC4h7xD9blb5se974Hg8M6utAQ/viewform';
+            }}
             className="w-full sm:w-auto px-6 sm:px-8 py-2 sm:py-3 bg-gradient-to-r from-game-purple to-game-pink rounded-full font-gaming text-white text-sm sm:text-base shadow-lg hover:shadow-game-purple/50 transition-all duration-300"
           >
             Register Now

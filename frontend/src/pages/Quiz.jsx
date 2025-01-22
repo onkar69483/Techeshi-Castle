@@ -98,10 +98,29 @@ const Quiz = () => {
     try {
       const response = await axios.get(`https://techeshi-castle-backend.vercel.app/circuit?circuit_number=${circuitNumber}`);
       setCircuit(response.data);
+  
+      if (response.data && response.data.link) {
+        // Get the current screen dimensions
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+  
+        // Resize and reposition the current tab to the left
+        window.moveTo(0, 0); // Move the current tab to the top-left corner
+        window.resizeTo(screenWidth / 2, screenHeight); // Resize current tab to occupy the left half
+  
+        // Open the new tab and position it to the right
+        window.open(
+          response.data.link,
+          '_blank',
+          `width=${screenWidth / 2},height=${screenHeight},left=${screenWidth / 2},top=0`
+        );
+      }
     } catch (error) {
       console.error('Error fetching circuit:', error);
     }
   };
+  
+  
 
   const handleNextStep = () => {
     if (currentStepIndex < circuit?.circuit_step?.length - 1) {

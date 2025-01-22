@@ -8,8 +8,8 @@ const AdminLogin = () => {
 
   // Mock credentials (in real app, these would be in backend)
   const MOCK_ADMIN = {
-    username: 'admin',
-    password: 'admin123'
+    username: import.meta.env.VITE_MOCK_ADMIN_USERNAME,
+    password: import.meta.env.VITE_MOCK_ADMIN_PASSWORD,
   };
 
   const handleSubmit = (e) => {

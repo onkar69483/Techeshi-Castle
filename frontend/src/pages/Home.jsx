@@ -13,7 +13,7 @@ const Home = () => {
   const events = [
     {
       title: "Circuit Showdown",
-      description: "Test your electronic knowledge in this exciting circuit design challenge! Solve quiz questions to unlock circuit solutions, then bring them to life in TinkerCad. Teams will compete to build the most efficient circuits based on quiz solutions.",
+      description: "Test your electronic knowledge in this exciting circuit design challenge! Solve quiz questions to unlock circuit solutions, then bring them to life. Teams will compete to build the most efficient circuits based on quiz solutions.",
       image: "https://images.unsplash.com/photo-1517420704952-d9f39e95b43e",
       color: "from-violet-600 to-fuchsia-600",
       icon: "⚡"
@@ -255,20 +255,24 @@ const Home = () => {
               whileHover={{ y: -10, transition: { duration: 0.3 } }}
               className="relative group rounded-2xl overflow-hidden shadow-2xl border border-white/10"
             >
-              <div className={`absolute inset-0 bg-gradient-to-b ${event.color} opacity-75 z-10`} />
+              <div
+                className={`absolute inset-0 bg-gradient-to-b ${event.color} opacity-75 z-10`}
+              />
               <img
                 src={event.image}
                 alt={event.title}
                 className="w-full h-[300px] sm:h-[400px] object-cover transition-transform duration-300 group-hover:scale-110"
               />
-              <div className="absolute top-4 left-4 z-20 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
-                <span className="font-gaming text-white">Level {index + 1}</span>
+              <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-20 bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">
+                <span className="font-gaming text-white text-xs sm:text-sm lg:text-lg">
+                  Level {index + 1}
+                </span>
               </div>
-              <div className="absolute top-4 right-4 z-20 text-4xl">
+              <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-20 text-2xl sm:text-4xl">
                 {event.icon}
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 z-20 bg-gradient-to-t from-black/80 to-transparent">
-                <h3 className="text-xl sm:text-2xl font-gaming font-bold mb-2 text-white">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-gaming font-bold mb-2 text-white">
                   {event.title}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-200 font-space mb-4">

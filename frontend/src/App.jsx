@@ -9,6 +9,7 @@ import CreateTeam from './pages/CreateTeam';
 import Leaderboard from './pages/Leaderboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import Quiz from './pages/Quiz';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
     return (
@@ -16,6 +17,7 @@ const App = () => {
             <div className="min-h-screen bg-game-dark text-white font-space">
                 <Navbar />
                 <Analytics />
+                <Toaster />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/events" element={<Events />} />
@@ -31,7 +33,11 @@ const App = () => {
                         </ProtectedRoute>
                     } />
                     <Route path="/leaderboard" element={<Leaderboard />} />
-                    <Route path="/quiz" element={<Quiz />} />
+                    <Route path="/quiz" element={
+                        <ProtectedRoute>
+                            <Quiz />
+                        </ProtectedRoute>
+                    } />
                 </Routes>
             </div>
         </BrowserRouter>

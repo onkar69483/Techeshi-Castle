@@ -2,6 +2,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Timer, Target, Zap, Users, Calendar, MapPin } from 'lucide-react';
+import MysteryQuestImage from '../assets/Mystery_quest3.png';
+import TargetStrikeImage from '../assets/Target_Strike1.png'; 
+import LazerMaze from '../assets/LazerMaze.png'; 
 
 const EventCard = ({ title, description, rules = [], criteria = [], image, index, location, time, date, capacity }) => {
   const [ref, inView] = useInView({
@@ -116,62 +119,61 @@ const EventCard = ({ title, description, rules = [], criteria = [], image, index
 const Events = () => {
   const events = [
     {
-      title: "Circuit Showdown",
-      description: "Test your electronic knowledge in this exciting circuit design challenge! Solve quiz questions to unlock circuit solutions, then bring them to life in TinkerCad.",
-      image: "https://images.unsplash.com/photo-1517420704952-d9f39e95b43e",
-      location: "Class room no. 404",
+      title: "Laser Maze",
+      description: "Traverse through a Laser Maze without triggering the alarm in this ultimate test of precision and patience.",
+      image: LazerMaze,
+      location: "Symbiosis Institute of Technology, Pune",
       time: "9:00 am",
       date: "24-25 January, 2025",
-      capacity: "Teams of 4",
+      capacity: "3-4 members",
       rules: [
-        "Open to all enrolled college students",
-        "Teams of 3-4 members",
-        "Complete quiz to unlock circuit solutions",
-        "Build circuits in TinkerCad based on solutions"
+        "Participants must traverse through a Laser Maze without triggering the alarm.",
+        "Crossing or touching a laser beam will trigger the alarm."
       ],
       criteria: [
-        "Circuit functionality evaluation",
-        "Number of questions needed for completion",
-        "Time taken as tiebreaker"
+        "Points will be awarded based on the time taken to complete the maze.",
+        "Penalty points will be deducted for each time the alarm is triggered.",
+        "Level 1 score = (Base points for completion) – (Penalties)."
       ]
     },
     {
-      title: "Bullseye Battle",
-      description: "Take control of a remote-controlled turret in this precision shooting challenge. Use your points wisely to purchase ammunition and demonstrate your accuracy!",
-      image: "https://images.unsplash.com/photo-1593349480785-6ba0825f57f5?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      location: "Class room no. 404",
+      title: "Mystery Quest",
+      description: "Observe the light sequence carefully and replicate it using the buttons provided. Difficulty increases with each round as sequences get longer and faster.",
+      image: MysteryQuestImage,
+      location: "Symbiosis Institute of Technology, Pune",
       time: "9:00 am",
       date: "24-25 January, 2025",
-      capacity: "Teams of 4",
+      capacity: "3-4 members",
       rules: [
-        "Use remote-controlled turret",
-        "Purchase bullets with points from Level 1",
-        "Knock down all targets within time limit"
+        "Participants must observe the light sequence carefully.",
+        "Once the sequence is complete, they must replicate it using the buttons provided.",
+        "Difficulty increases with each round as sequences get longer and faster.",
+        "Any mistake will end the attempt for that sequence."
       ],
       criteria: [
-        "Number of bullets required for completion",
-        "Efficiency of point usage",
-        "Time taken to clear all targets"
+        "Points will be awarded based on the number of correct sequences completed.",
+        "Bonus points may be given for completing higher-difficulty rounds.",
+        "Scores will be added to the cumulative total across all levels."
       ]
     },
     {
-      title: "Laser Labyrinth",
-      description: "Navigate through an intricate maze of laser beams in this ultimate test of precision and patience. Can you make it through without triggering the alarm?",
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b",
-      location: "Class room no. 404",
+      title: "Target Strike",
+      description: "Take aim with a Nerf gun and strike the targets within the time limit to rack up points and climb the leaderboard.",
+      image: TargetStrikeImage,
+      location: "Symbiosis Institute of Technology, Pune",
       time: "9:00 am",
       date: "24-25 January, 2025",
-      capacity: "Teams of 4",
+      capacity: "3-4 members",
       rules: [
-        "Navigate through laser maze",
-        "Avoid triggering alarms",
-        "Complete course within time limit"
+        "Participants will be given a Nerf gun with a fixed number of darts.",
+        "They must shoot at the designated targets within the time limit.",
+        "Only darts that directly hit the targets will be counted as valid.",
+        "Tampering with targets or equipment will result in disqualification."
       ],
       criteria: [
-        "Time taken to complete maze",
-        "Number of alarms triggered",
-        "Combined points from all levels determine winners",
-        "Real-time leaderboard updates on website"
+        "Points will be awarded for each target successfully hit.",
+        "Extra points may be given for hitting special marked targets (if included).",
+        "Scores will be combined with other levels to determine the final leaderboard."
       ]
     }
   ];
@@ -184,7 +186,7 @@ const Events = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl sm:text-5xl md:text-6xl font-gaming font-bold text-center mb-4 sm:mb-6 bg-gradient-to-r from-game-purple to-game-pink text-transparent bg-clip-text"
         >
-          Circuit Showdown Championship
+          Techeshi's Castle
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -205,4 +207,3 @@ const Events = () => {
 };
 
 export default Events;
-

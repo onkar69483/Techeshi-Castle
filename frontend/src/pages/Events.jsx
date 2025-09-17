@@ -124,7 +124,7 @@ const Events = () => {
       image: LazerMaze,
       location: "Symbiosis Institute of Technology, Pune",
       time: "9:00 am",
-      date: "24-25 January, 2025",
+      date: "19-20 September, 2025",
       capacity: "3-4 members",
       rules: [
         "Participants must traverse through a Laser Maze without triggering the alarm.",
@@ -142,7 +142,7 @@ const Events = () => {
       image: MysteryQuestImage,
       location: "Symbiosis Institute of Technology, Pune",
       time: "9:00 am",
-      date: "24-25 January, 2025",
+      date: "19-20 September, 2025",
       capacity: "3-4 members",
       rules: [
         "Participants must observe the light sequence carefully.",
@@ -162,7 +162,7 @@ const Events = () => {
       image: TargetStrikeImage,
       location: "Symbiosis Institute of Technology, Pune",
       time: "9:00 am",
-      date: "24-25 January, 2025",
+      date: "19-20 September, 2025",
       capacity: "3-4 members",
       rules: [
         "Participants will be given a Nerf gun with a fixed number of darts.",

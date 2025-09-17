@@ -8,27 +8,30 @@ import { ChevronDown, Users, Calendar, Crown, Star, Shield, Trophy } from 'lucid
 import DynamicBackground from "../components/DynamicBackground";
 import JoinBattleModal from "../components/JoinBattleModal";
 import axios from "axios";
+import MysteryQuestImage from '../assets/Mystery_quest3.png';
+import TargetStrikeImage from '../assets/Target_Strike1.png'; 
+import LazerMaze from '../assets/LazerMaze.png'; 
 
 const Home = () => {
   const events = [
     {
-      title: "Circuit Showdown",
-      description: "Test your electronic knowledge in this exciting circuit design challenge! Solve quiz questions to unlock circuit solutions, then bring them to life. Teams will compete to build the most efficient circuits based on quiz solutions.",
-      image: "https://images.unsplash.com/photo-1517420704952-d9f39e95b43e",
+      title: "Lazer Maze",
+      description: "Traverse through a Laser Maze without triggering the alarm in this ultimate test of precision and patience.",
+      image: LazerMaze,
       color: "from-violet-600 to-fuchsia-600",
       icon: "⚡"
     },
     {
-      title: "Bullseye Battle",
-      description: "Take control of a remote-controlled turret in this precision shooting challenge! Use your points from Circuit Showdown to purchase ammunition and demonstrate your accuracy. Can you hit all targets with minimal resources?",
+      title: "Mystery Quest",
+      description: "Observe the light sequence carefully and replicate it using the buttons provided. Difficulty increases with each round as sequences get longer and faster.",
       color: "from-cyan-600 to-blue-600",
-      image: "https://images.unsplash.com/photo-1599687267812-35c05ff70ee9",
+      image: MysteryQuestImage,
       icon: "🎯"
     },
     {
-      title: "Laser Labyrinth",
-      description: "Navigate through an intricate maze of laser beams in this ultimate test of precision and patience. Avoid triggers, beat the clock, and maintain your composure as you traverse through this challenging final level!",
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b",
+      title: "Target Strike",
+      description: "Take aim with a Nerf gun and strike the targets within the time limit to rack up points and climb the leaderboard.",
+      image: TargetStrikeImage,
       color: "from-rose-600 to-orange-600",
       icon: "🔮"
     }

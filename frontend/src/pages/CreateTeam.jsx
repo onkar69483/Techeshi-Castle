@@ -19,7 +19,6 @@ const CreateTeam = () => {
   const [showChallengeScores, setShowChallengeScores] = useState(true);
   const [contactError, setContactError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [challenge1Completed, setChallenge1Completed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,22 +28,7 @@ const CreateTeam = () => {
     if (savedFormData) {
       setTeamData(JSON.parse(savedFormData));
     }
-
-    // Check for quiz score from location state
-    if (location.state?.quizScore !== undefined) {
-      const score = location.state.quizScore;
-      setTeamData(prev => ({
-        ...prev,
-        challengeScores: {
-          ...prev.challengeScores,
-          challenge1: score
-        }
-      }));
-      setChallenge1Completed(true);
-      // Clear the session storage after setting the score
-      sessionStorage.removeItem('createTeamFormData');
-    }
-  }, [location.state]);
+  }, []);
 
   useEffect(() => {
     const { challenge1, challenge2, challenge3 } = teamData.challengeScores;
@@ -101,12 +85,6 @@ const CreateTeam = () => {
         [key]: numValue,
       },
     }));
-  };
-
-  const handleStartQuiz = () => {
-    // Save current form data to session storage
-    sessionStorage.setItem('createTeamFormData', JSON.stringify(teamData));
-    navigate('/quiz', { state: { returnTo: '/admin/create-team' } });
   };
 
   const handleSubmit = async (e) => {
@@ -205,23 +183,15 @@ const CreateTeam = () => {
           {showChallengeScores && (
             <>
               <div className="mb-4">
-                <label className="block font-gaming text-white mb-2">Challenge 1</label>
-                {!challenge1Completed ? (
-                  <button
-                    type="button"
-                    onClick={handleStartQuiz}
-                    className="w-full px-4 py-3 bg-gradient-to-r from-game-purple to-game-pink rounded-lg font-gaming text-white hover:opacity-90 transition-opacity"
-                  >
-                    Start Quiz
-                  </button>
-                ) : (
-                  <input
-                    type="number"
-                    value={teamData.challengeScores.challenge1}
-                    disabled
-                    className="w-full px-4 py-3 bg-game-dark rounded-lg border border-game-purple/20 focus:border-game-pink/50 focus:outline-none text-white"
-                  />
-                )}
+                <label className="block font-gaming text-white mb-2">Challenge 1 Score</label>
+                <input
+                  type="number"
+                  value={teamData.challengeScores.challenge1}
+                  onChange={(e) =>
+                    handleChallengeScoreChange('challenge1', e.target.value)
+                  }
+                  className="w-full px-4 py-3 bg-game-dark rounded-lg border border-game-purple/20 focus:border-game-pink/50 focus:outline-none text-white"
+                />
               </div>
               <div className="mb-4">
                 <label className="block font-gaming text-white mb-2">Challenge 2 Score</label>

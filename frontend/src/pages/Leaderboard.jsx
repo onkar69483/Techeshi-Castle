@@ -41,8 +41,10 @@ const Leaderboard = () => {
           rank: index + 1,
           team: team.team_name || 'Unknown Team',
           score: typeof team.total_score === 'number' ? team.total_score : 0,
+          college: team.college || 'Unknown College',
         }))
-        .sort((a, b) => b.score - a.score);
+        .sort((a, b) => b.score - a.score)
+        .map((team, index) => ({ ...team, rank: index + 1 })); // Re-assign ranks after sorting
 
       setScores(formattedTeams);
       setError(null);
@@ -74,8 +76,10 @@ const Leaderboard = () => {
       {[...Array(5)].map((_, i) => (
         <div key={i} className="border-b border-game-purple/10">
           <div className="flex px-6 py-6">
-            <div className="w-1/4 h-6 bg-game-purple/20 rounded"></div>
-            <div className="w-1/2 h-6 bg-game-purple/10 rounded ml-4"></div>
+            <div className="w-1/6 h-6 bg-game-purple/20 rounded"></div>
+            <div className="w-1/4 h-6 bg-game-purple/10 rounded ml-4"></div>
+            <div className="w-1/6 h-6 bg-game-purple/10 rounded ml-4"></div>
+            <div className="w-1/4 h-6 bg-game-purple/10 rounded ml-4"></div>
           </div>
         </div>
       ))}
@@ -124,15 +128,16 @@ const Leaderboard = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-game-purple/20">
-                    <th className="px-6 py-4 text-left text-game-purple">Rank</th>
-                    <th className="px-6 py-4 text-left text-game-purple">Team</th>
-                    <th className="px-6 py-4 text-left text-game-purple">Score</th>
+                    <th className="px-6 py-4 text-center text-game-purple">Rank</th>
+                    <th className="px-6 py-4 text-center text-game-purple">Team</th>
+                    <th className="px-6 py-4 text-center text-game-purple">Score</th>
+                    <th className="px-6 py-4 text-center text-game-purple">College</th>
                   </tr>
                 </thead>
                 <tbody>
                   {scores.length === 0 ? (
                     <tr>
-                      <td colSpan="3" className="px-6 py-8 text-center text-gray-400">
+                      <td colSpan="4" className="px-6 py-8 text-center text-gray-400">
                         No teams available
                       </td>
                     </tr>
@@ -147,18 +152,19 @@ const Leaderboard = () => {
                           score.rank <= 3 ? 'bg-game-purple/10' : ''
                         }`}
                       >
-                        <td className="px-6 py-6 flex items-center gap-3">
+                        <td className="px-6 py-6 flex items-center justify-center gap-3">
                           {getRankIcon(score.rank)}
                           <span className={`font-semibold ${score.rank <= 3 ? 'text-game-pink' : ''}`}>
                             #{score.rank}
                           </span>
                         </td>
-                        <td className="px-6 py-6 font-medium">{score.team}</td>
-                        <td className="px-6 py-6">
+                        <td className="px-6 py-6 font-medium text-center">{score.team}</td>
+                        <td className="px-6 py-6 text-center">
                           <span className="bg-game-purple/20 px-4 py-1 rounded-full">
                             {score.score.toLocaleString()}
                           </span>
                         </td>
+                        <td className="px-6 py-6 text-gray-300 text-center">{score.college}</td>
                       </motion.tr>
                     ))
                   )}

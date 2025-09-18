@@ -34,8 +34,10 @@ const AdminDashboard = () => {
         challenge2Score: team.challenge_2_score,
         challenge3Score: team.challenge_3_score,
         totalScore: team.total_score,
+        contact: team.contact,
       }));
       setTeams(fetchedTeams);
+      console.log(fetchedTeams);
     } catch (error) {
       showSnackbar("Error fetching teams", "error");
     }
@@ -153,13 +155,17 @@ const AdminDashboard = () => {
 
         <div className="grid grid-cols-2 gap-4">
           {[ 
-            { label: "Challenge 1", value: "challenge1Score" },
-            { label: "Challenge 2", value: "challenge2Score" },
-            { label: "Challenge 3", value: "challenge3Score" },
-            { label: "Total Score", value: "totalScore" }
+            { label: "Challenge 1", sublabel: "Lazer Maze", value: "challenge1Score" },
+            { label: "Challenge 2", sublabel: "Mystery Quest", value: "challenge2Score" },
+            { label: "Challenge 3", sublabel: "Target Strike", value: "challenge3Score" },
+            { label: "Total Score", sublabel: "", value: "totalScore" },
+            { label: "Contact", sublabel: "", value: "contact" }
           ].map((challenge) => (
             <div key={challenge.label}>
               <label className="text-gray-400 text-sm">{challenge.label}</label>
+              {challenge.sublabel && (
+                <div className="text-xs text-gray-500">{challenge.sublabel}</div>
+              )}
               {editingTeam?.id === team.id && challenge.value !== "totalScore" ? (
                 <input
                   type="number"
@@ -241,9 +247,19 @@ const AdminDashboard = () => {
                 <tr className="border-b border-gray-700">
                   <th className="px-6 py-4 text-left text-sm text-gray-300">ID</th>
                   <th className="px-6 py-4 text-left text-sm text-gray-300">Team Name</th>
-                  <th className="px-6 py-4 text-left text-sm text-gray-300">Challenge 1</th>
-                  <th className="px-6 py-4 text-left text-sm text-gray-300">Challenge 2</th>
-                  <th className="px-6 py-4 text-left text-sm text-gray-300">Challenge 3</th>
+                  <th className="px-6 py-4 text-left text-sm text-gray-300">Contact</th>
+                  <th className="px-6 py-4 text-left text-sm text-gray-300">
+                    <div>Challenge 1</div>
+                    <div className="text-xs text-gray-400 font-normal">Lazer Maze</div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm text-gray-300">
+                    <div>Challenge 2</div>
+                    <div className="text-xs text-gray-400 font-normal">Mystery Quest</div>
+                  </th>
+                  <th className="px-6 py-4 text-left text-sm text-gray-300">
+                    <div>Challenge 3</div>
+                    <div className="text-xs text-gray-400 font-normal">Target Strike</div>
+                  </th>
                   <th className="px-6 py-4 text-left text-sm text-gray-300">Total Score</th>
                   <th className="px-6 py-4 text-left text-sm text-gray-300">Actions</th>
                 </tr>
@@ -262,6 +278,22 @@ const AdminDashboard = () => {
                         />
                       ) : team.teamName}
                     </td>
+                    <td className="px-6 py-4">
+                      {editingTeam?.id === team.id ? (
+                        <div className="flex items-center">
+                          <span className="mr-1 text-gray-400">+91</span>
+                          <input
+                            type="number"
+                            value={editingTeam.contact}
+                            onChange={(e) => setEditingTeam({ ...editingTeam, contact: e.target.value })}
+                            className="w-28 px-2 py-1 bg-gray-900 rounded border border-gray-700 focus:border-blue-500 focus:outline-none text-white"
+                          />
+                        </div>
+                      ) : (
+                        <span>+91 {team.contact}</span>
+                      )}
+                    </td>
+
                     <td className="px-6 py-4">
                       {editingTeam?.id === team.id ? (
                         <input
